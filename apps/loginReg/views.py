@@ -13,6 +13,7 @@ import codecs;
 @api_view(['POST'])
 def login(request):
     print("login");
+    return Response(json.dumps({'status':True}))
     
 
 # Create your views here.
