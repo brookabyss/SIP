@@ -1,0 +1,22 @@
+{
+  "name": "sip",
+  "version": "1.0.0",
+  "description": "Site information page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brookabyss/SIP.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brookabyss/SIP/issues"
+  },
+  "homepage": "https://github.com/brookabyss/SIP#readme",
+  "dependencies": {
+    "angular": "^1.6.10"
+  }
+}

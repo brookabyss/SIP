@@ -16,9 +16,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.conf.urls import url,include
+from django.contrib.staticfiles.views import serve
+from django.views.generic import RedirectView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('apps.loginReg.urls',namespace='loginReg' , app_name='loginReg')),
-
+    url(r'^$', serve,kwargs={'path': 'index.html'}),
+    url(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
+        RedirectView.as_view(url='/static/%(path)s', permanent=False)),
+    #url(r'^', include('apps.loginReg.urls',namespace='loginReg' , app_name='loginReg')),
+    
 ]

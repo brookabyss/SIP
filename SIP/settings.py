@@ -16,6 +16,8 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+
+FORM_RENDERER = 'djng.forms.renderers.DjangoAngularBootstrap3Templates'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -25,13 +27,16 @@ SECRET_KEY = 'j!(6i0#2p@+qlf!d-hbie9+sj=7-!obcla=p2o&pe^b6u-y_qw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sip-brookabyss.c9users.io']
 
+CORS_ORIGIN_ALLOW_ALL = True     
 
 # Application definition
 
 INSTALLED_APPS = [
     'apps.loginReg',
+    'djng',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -121,3 +127,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # MEDIA_URL = '/images/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'SIP')
+
+ANGULAR_APP_DIR = os.path.join(BASE_DIR, 'client/dist')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = [
+    ('node_modules', os.path.join(BASE_DIR, 'node_modules')),
+    os.path.join(ANGULAR_APP_DIR),
+]
+
