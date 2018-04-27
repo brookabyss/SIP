@@ -1,15 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { User } from '../user';
+import { LoginService } from './login-service';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
-
-  constructor() { }
+export class LoginComponent implements OnDestroy {
+  
+  user: User;
+  
+  constructor(private _loginservice: LoginService) { }
 
   ngOnInit() {
+    this.user= new User;
+  }
+  
+  onLogin(){
+    console.log(this.user);
+    this._loginservice.login(this.user)
+    .then(data=>console.log(data))
+    .catch(err=>console.log(err));
+  }
+  
+  ngOnDestroy(){
+    
   }
 
 }

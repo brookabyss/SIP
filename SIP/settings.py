@@ -137,3 +137,4 @@ STATICFILES_DIRS = [
     os.path.join(ANGULAR_APP_DIR),
 ]
 
+CSRF_USE_SESSIONS = True
