@@ -30,21 +30,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 var login_component_1 = __webpack_require__("./src/app/login/login.component.ts");
+var sites_all_component_1 = __webpack_require__("./src/app/sites/sites-all/sites-all.component.ts");
+var sites_new_component_1 = __webpack_require__("./src/app/sites/sites-new/sites-new.component.ts");
+var sites_edit_component_1 = __webpack_require__("./src/app/sites/sites-edit/sites-edit.component.ts");
+var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 var routes = [
     {
         'path': '',
         component: login_component_1.LoginComponent
     },
-    { path: '**', redirectTo: 'welcome' }
+    {
+        'path': 'sites',
+        children: [
+            { 'path': '', component: sites_all_component_1.SitesAllComponent },
+            { 'path': 'new', component: sites_new_component_1.SitesNewComponent },
+            { 'path': 'edit/:id', component: sites_edit_component_1.SitesEditComponent },
+            { 'path': 'detail/:id', component: sites_edit_component_1.SitesEditComponent },
+            { 'path': '*', component: sites_all_component_1.SitesAllComponent }
+        ]
+    },
+    { path: '**', redirectTo: '' }
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
     }
     AppRoutingModule = __decorate([
         core_1.NgModule({
-            imports: [router_1.RouterModule.forRoot(routes)],
+            imports: [router_1.RouterModule.forRoot(routes, { useHash: true })],
             exports: [router_1.RouterModule],
         })
     ], AppRoutingModule);
@@ -120,6 +133,12 @@ var app_routing_module_1 = __webpack_require__("./src/app/app-routing.module.ts"
 var app_component_1 = __webpack_require__("./src/app/app.component.ts");
 var login_component_1 = __webpack_require__("./src/app/login/login.component.ts");
 var login_service_1 = __webpack_require__("./src/app/login/login-service.ts");
+var sites_service_1 = __webpack_require__("./src/app/sites/sites-service.ts");
+var sites_component_1 = __webpack_require__("./src/app/sites/sites.component.ts");
+var sites_all_component_1 = __webpack_require__("./src/app/sites/sites-all/sites-all.component.ts");
+var sites_new_component_1 = __webpack_require__("./src/app/sites/sites-new/sites-new.component.ts");
+var sites_edit_component_1 = __webpack_require__("./src/app/sites/sites-edit/sites-edit.component.ts");
+var sites_single_detail_component_1 = __webpack_require__("./src/app/sites/sites-single-detail/sites-single-detail.component.ts");
 function cookieStrategy() {
     console.log("******************************************************");
     var c = new http_1.CookieXSRFStrategy('csrftoken', 'X-CSRFToken');
@@ -134,15 +153,20 @@ var AppModule = /** @class */ (function () {
         core_1.NgModule({
             declarations: [
                 app_component_1.AppComponent,
-                login_component_1.LoginComponent
+                login_component_1.LoginComponent,
+                sites_component_1.SitesComponent,
+                sites_all_component_1.SitesAllComponent,
+                sites_new_component_1.SitesNewComponent,
+                sites_edit_component_1.SitesEditComponent,
+                sites_single_detail_component_1.SitesSingleDetailComponent
             ],
             imports: [
                 platform_browser_1.BrowserModule,
                 forms_1.FormsModule,
                 http_1.HttpModule,
-                app_routing_module_1.AppRoutingModule
+                app_routing_module_1.AppRoutingModule,
             ],
-            providers: [login_service_1.LoginService, {
+            providers: [sites_service_1.SitesService, login_service_1.LoginService, {
                     provide: http_1.XSRFStrategy,
                     useFactory: cookieStrategy,
                 }],
@@ -257,6 +281,295 @@ var LoginComponent = /** @class */ (function () {
     return LoginComponent;
 }());
 exports.LoginComponent = LoginComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-all/sites-all.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-all/sites-all.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  sites-all works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-all/sites-all.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var SitesAllComponent = /** @class */ (function () {
+    function SitesAllComponent() {
+    }
+    SitesAllComponent.prototype.ngOnInit = function () {
+    };
+    SitesAllComponent = __decorate([
+        core_1.Component({
+            selector: 'app-sites-all',
+            template: __webpack_require__("./src/app/sites/sites-all/sites-all.component.html"),
+            styles: [__webpack_require__("./src/app/sites/sites-all/sites-all.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], SitesAllComponent);
+    return SitesAllComponent;
+}());
+exports.SitesAllComponent = SitesAllComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-edit/sites-edit.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-edit/sites-edit.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  sites-edit works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-edit/sites-edit.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var SitesEditComponent = /** @class */ (function () {
+    function SitesEditComponent() {
+    }
+    SitesEditComponent.prototype.ngOnInit = function () {
+    };
+    SitesEditComponent = __decorate([
+        core_1.Component({
+            selector: 'app-sites-edit',
+            template: __webpack_require__("./src/app/sites/sites-edit/sites-edit.component.html"),
+            styles: [__webpack_require__("./src/app/sites/sites-edit/sites-edit.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], SitesEditComponent);
+    return SitesEditComponent;
+}());
+exports.SitesEditComponent = SitesEditComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-new/sites-new.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-new/sites-new.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  sites-new works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-new/sites-new.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var SitesNewComponent = /** @class */ (function () {
+    function SitesNewComponent() {
+    }
+    SitesNewComponent.prototype.ngOnInit = function () {
+    };
+    SitesNewComponent = __decorate([
+        core_1.Component({
+            selector: 'app-sites-new',
+            template: __webpack_require__("./src/app/sites/sites-new/sites-new.component.html"),
+            styles: [__webpack_require__("./src/app/sites/sites-new/sites-new.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], SitesNewComponent);
+    return SitesNewComponent;
+}());
+exports.SitesNewComponent = SitesNewComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-service.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var http_1 = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
+__webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
+__webpack_require__("./node_modules/rxjs/_esm5/add/operator/toPromise.js");
+var BehaviorSubject_1 = __webpack_require__("./node_modules/rxjs/_esm5/BehaviorSubject.js");
+var SitesService = /** @class */ (function () {
+    function SitesService(_http) {
+        this._http = _http;
+        this.observedSites = new BehaviorSubject_1.BehaviorSubject([]);
+    }
+    SitesService.prototype.updateSites = function (sites) {
+        this.observedSites.next(sites);
+    };
+    SitesService = __decorate([
+        core_1.Injectable(),
+        __metadata("design:paramtypes", [http_1.Http])
+    ], SitesService);
+    return SitesService;
+}());
+exports.SitesService = SitesService;
+
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-single-detail/sites-single-detail.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-single-detail/sites-single-detail.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  sites-single-detail works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-single-detail/sites-single-detail.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var SitesSingleDetailComponent = /** @class */ (function () {
+    function SitesSingleDetailComponent() {
+    }
+    SitesSingleDetailComponent.prototype.ngOnInit = function () {
+    };
+    SitesSingleDetailComponent = __decorate([
+        core_1.Component({
+            selector: 'app-sites-single-detail',
+            template: __webpack_require__("./src/app/sites/sites-single-detail/sites-single-detail.component.html"),
+            styles: [__webpack_require__("./src/app/sites/sites-single-detail/sites-single-detail.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], SitesSingleDetailComponent);
+    return SitesSingleDetailComponent;
+}());
+exports.SitesSingleDetailComponent = SitesSingleDetailComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/sites/sites.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/sites/sites.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  sites works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/sites/sites.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var SitesComponent = /** @class */ (function () {
+    function SitesComponent() {
+    }
+    SitesComponent.prototype.ngOnInit = function () {
+    };
+    SitesComponent = __decorate([
+        core_1.Component({
+            selector: 'app-sites',
+            template: __webpack_require__("./src/app/sites/sites.component.html"),
+            styles: [__webpack_require__("./src/app/sites/sites.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], SitesComponent);
+    return SitesComponent;
+}());
+exports.SitesComponent = SitesComponent;
 
 
 /***/ }),

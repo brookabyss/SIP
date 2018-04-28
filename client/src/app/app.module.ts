@@ -8,6 +8,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import {LoginService } from './login/login-service';
+import {SitesService } from './sites/sites-service';
+import { SitesComponent } from './sites/sites.component';
+import { SitesAllComponent } from './sites/sites-all/sites-all.component';
+import { SitesNewComponent } from './sites/sites-new/sites-new.component';
+import { SitesEditComponent } from './sites/sites-edit/sites-edit.component';
+import { SitesSingleDetailComponent } from './sites/sites-single-detail/sites-single-detail.component';
 
 export function cookieStrategy() {
   console.log("******************************************************")
@@ -21,15 +27,21 @@ export function cookieStrategy() {
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    SitesComponent,
+    SitesAllComponent,
+    SitesNewComponent,
+    SitesEditComponent,
+    SitesSingleDetailComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule 
+    AppRoutingModule,
+   
   ],
-  providers: [LoginService,{
+  providers: [SitesService, LoginService,{
         provide: XSRFStrategy,
         useFactory: cookieStrategy,
     }],
