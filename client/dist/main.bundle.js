@@ -295,7 +295,7 @@ module.exports = ""
 /***/ "./src/app/sites/sites-all/sites-all.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  sites-all works!\n</p>\n"
+module.exports = "<table class=\"table\">\n  <thead class=\"thead-dark\">\n    <tr>\n      <th scope=\"col\">Site Code</th>\n      <th scope=\"col\">Site Name</th>\n      <th scope=\"col\">Region</th>\n      <th scope=\"col\">Address</th>\n      <th scope=\"col\">Latitude</th>\n      <th scope=\"col\">Longitude</th>\n      <th scope=\"col\">ASM</th>\n      <th scope=\"col\">RSM</th>\n    </tr>\n  </thead>\n  <tbody>\n    \n  </tbody>\n</table>"
 
 /***/ }),
 
