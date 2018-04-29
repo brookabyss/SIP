@@ -34,3 +34,105 @@ def make_api_call(method, url, token, payload = None, parameters = None):
       response = requests.post(url, headers = headers, data = json.dumps(payload), params = parameters)
 
   return response
+
+
+def get_my_events(access_token):
+  get_events_url = graph_endpoint.format('/me/events')
+
+  # Use OData query parameters to control the results
+  #  - Only first 10 results returned
+  #  - Only return the Subject, Start, and End fields
+  #  - Sort the results by the Start field in ascending order
+  query_parameters = {'$top': '10',
+                      '$select': 'subject,start,end',
+                      '$orderby': 'start/dateTime ASC'}
+
+  r = make_api_call('GET', get_events_url, access_token, parameters = query_parameters)
+
+  if (r.status_code == requests.codes.ok):
+    return r.json()
+  else:
+    return "{0}: {1}".format(r.status_code, r.text)
+    
+def get_me(access_token):
+  get_me_url = graph_endpoint.format('/me')
+
+  # Use OData query parameters to control the results
+  #  - Only return the displayName and mail fields
+  query_parameters = {'$select': 'displayName,mail'}
+
+  r = make_api_call('GET', get_me_url, access_token, "", parameters = query_parameters)
+
+  if (r.status_code == requests.codes.ok):
+    return r.json()
+  else:
+    return "{0}: {1}".format(r.status_code, r.text)
+    
+def get_my_messages(access_token):
+  get_messages_url = graph_endpoint.format('/me/mailfolders/inbox/messages')
+
+  # Use OData query parameters to control the results
+  #  - Only first 10 results returned
+  #  - Only return the ReceivedDateTime, Subject, and From fields
+  #  - Sort the results by the ReceivedDateTime field in descending order
+  query_parameters = {'$top': '10',
+                      '$select': 'receivedDateTime,subject,from',
+                      '$orderby': 'receivedDateTime DESC'}
+
+  r = make_api_call('GET', get_messages_url, access_token, parameters = query_parameters)
+
+  if (r.status_code == requests.codes.ok):
+    return r.json()
+  else:
+    return "{0}: {1}".format(r.status_code, r.text)
+    
+    
+    
+def send_my_email(access_token):
+    send_messages_url = graph_endpoint.format('/me/sendmail')
+
+    # Use OData query parameters to control the results
+    #  - Only first 10 results returned
+  #  - Only return the ReceivedDateTime, Subject, and From fields
+    #  - Sort the results by the ReceivedDateTime field in descending order
+    query_parameters = {'$top': '10',
+                      '$select': 'receivedDateTime,subject,from',
+                      '$orderby': 'receivedDateTime DESC'}
+                      
+                      
+    payload= {
+  "Message": {
+    "Subject": "Meet for lunch?",
+    "Body": {
+      "ContentType": "Text",
+      "Content": "The new cafeteria is open."
+    },
+    "ToRecipients": [
+      {
+        "EmailAddress": {
+          "Address": "brookfullstack@outlook.com",
+        }
+      },
+      {
+        "EmailAddress": {
+          "Address": "brookfullstack@gmail.com",
+        }
+      }
+    ],
+    "Attachments": [
+      {
+        "@odata.type": "#Microsoft.OutlookServices.FileAttachment",
+        "Name": "menu.txt",
+        "ContentBytes": "bWFjIGFuZCBjaGVlc2UgdG9kYXk="
+      }
+    ]
+  },
+  "SaveToSentItems": "false"
+}
+
+    r = make_api_call('POST', send_messages_url, access_token, payload=payload)
+
+    if (r.status_code == requests.codes.ok):
+      return r.json()
+    else:
+      return "{0}: {1}".format(r.status_code, r.text)
