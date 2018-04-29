@@ -17,6 +17,228 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 
 /***/ }),
 
+/***/ "./src/app/alarms/alarms-dispatch/alarms-dispatch.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms-dispatch/alarms-dispatch.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "\n<div class=\"col-md-9 alarms\">\n    <p class=\"errors\" *ngFor=\"let error of error_messages\">{{error}}</p>\n\n    <h1 class=\"primarycolor \"><span>Dispatch Center</span></h1>\n    <form  #alarmForm=\"ngForm\"  novalidate>\n      <div class=\"form-group \"> \n        <input \n        class=\"form-control col-sm-4\"\n        type=\"string\" \n        name=\"description\"\n        required\n        [(ngModel)]=\"alarm.description\"\n        #description=\"ngModel\"\n        placeholder=\"Alarm\"\n    /><br>\n    <button class=\"btn btn-primary col-sm-4\" [disabled]=\"!alarmForm.form.valid\" (click)=\"onDispatch()\" >Dispatch</button>\n    </div>\n    \n     \n</form>\n</div>\n\n\n\n\n\n\n"
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms-dispatch/alarms-dispatch.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var alarms_service_1 = __webpack_require__("./src/app/alarms/alarms-service.ts");
+var alarms_1 = __webpack_require__("./src/app/alarms/alarms.ts");
+var AlarmsDispatchComponent = /** @class */ (function () {
+    function AlarmsDispatchComponent(_alarmsService) {
+        this._alarmsService = _alarmsService;
+    }
+    AlarmsDispatchComponent.prototype.ngOnInit = function () {
+        this.alarm = new alarms_1.Alarm;
+        this.sign_in_url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?scope=openid+User.Read+Mail.Read&redirect_uri=http%3A%2F%2Fsip-brookabyss.c9users.io%2Fsites%2Fgettoken&response_type=code&client_id=4b13fb9d-4fe5-4e48-82c5-21f3eee4e0f3";
+    };
+    AlarmsDispatchComponent.prototype.onDispatch = function () {
+        console.log(this.alarm);
+        this._alarmsService.dispatch(this.alarm)
+            .then(function (data) {
+            console.log(data);
+        })
+            .catch(function (err) { console.log(err); });
+    };
+    AlarmsDispatchComponent = __decorate([
+        core_1.Component({
+            selector: 'app-alarms-dispatch',
+            template: __webpack_require__("./src/app/alarms/alarms-dispatch/alarms-dispatch.component.html"),
+            styles: [__webpack_require__("./src/app/alarms/alarms-dispatch/alarms-dispatch.component.css")]
+        }),
+        __metadata("design:paramtypes", [alarms_service_1.AlarmsService])
+    ], AlarmsDispatchComponent);
+    return AlarmsDispatchComponent;
+}());
+exports.AlarmsDispatchComponent = AlarmsDispatchComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms-pending/alarms-pending.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms-pending/alarms-pending.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  alarms-pending works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms-pending/alarms-pending.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var AlarmsPendingComponent = /** @class */ (function () {
+    function AlarmsPendingComponent() {
+    }
+    AlarmsPendingComponent.prototype.ngOnInit = function () {
+    };
+    AlarmsPendingComponent = __decorate([
+        core_1.Component({
+            selector: 'app-alarms-pending',
+            template: __webpack_require__("./src/app/alarms/alarms-pending/alarms-pending.component.html"),
+            styles: [__webpack_require__("./src/app/alarms/alarms-pending/alarms-pending.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], AlarmsPendingComponent);
+    return AlarmsPendingComponent;
+}());
+exports.AlarmsPendingComponent = AlarmsPendingComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms-service.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var http_1 = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
+__webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
+__webpack_require__("./node_modules/rxjs/_esm5/add/operator/toPromise.js");
+var BehaviorSubject_1 = __webpack_require__("./node_modules/rxjs/_esm5/BehaviorSubject.js");
+var AlarmsService = /** @class */ (function () {
+    function AlarmsService(_http) {
+        this._http = _http;
+        this.observedAlarms = new BehaviorSubject_1.BehaviorSubject([]);
+    }
+    AlarmsService.prototype.updateaAlarms = function (alarms) {
+        this.observedAlarms.next(alarms);
+    };
+    AlarmsService.prototype.dispatch = function (alarm) {
+        console.log('alarm service');
+        return this._http.post('sites/alarm/dispatch', alarm).map(function (data) { return data.json(); }).toPromise();
+    };
+    AlarmsService = __decorate([
+        core_1.Injectable(),
+        __metadata("design:paramtypes", [http_1.Http])
+    ], AlarmsService);
+    return AlarmsService;
+}());
+exports.AlarmsService = AlarmsService;
+
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  alarms works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var AlarmsComponent = /** @class */ (function () {
+    function AlarmsComponent() {
+    }
+    AlarmsComponent.prototype.ngOnInit = function () {
+    };
+    AlarmsComponent = __decorate([
+        core_1.Component({
+            selector: 'app-alarms',
+            template: __webpack_require__("./src/app/alarms/alarms.component.html"),
+            styles: [__webpack_require__("./src/app/alarms/alarms.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], AlarmsComponent);
+    return AlarmsComponent;
+}());
+exports.AlarmsComponent = AlarmsComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/alarms/alarms.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Alarm = /** @class */ (function () {
+    function Alarm() {
+    }
+    return Alarm;
+}());
+exports.Alarm = Alarm;
+
+
+/***/ }),
+
 /***/ "./src/app/app-routing.module.ts":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -35,6 +257,8 @@ var sites_all_component_1 = __webpack_require__("./src/app/sites/sites-all/sites
 var sites_new_component_1 = __webpack_require__("./src/app/sites/sites-new/sites-new.component.ts");
 var sites_edit_component_1 = __webpack_require__("./src/app/sites/sites-edit/sites-edit.component.ts");
 var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+var alarms_dispatch_component_1 = __webpack_require__("./src/app/alarms/alarms-dispatch/alarms-dispatch.component.ts");
+var alarms_pending_component_1 = __webpack_require__("./src/app/alarms/alarms-pending/alarms-pending.component.ts");
 var routes = [
     {
         'path': '',
@@ -47,6 +271,14 @@ var routes = [
             { 'path': 'new', component: sites_new_component_1.SitesNewComponent },
             { 'path': 'edit/:id', component: sites_edit_component_1.SitesEditComponent },
             { 'path': 'detail/:id', component: sites_edit_component_1.SitesEditComponent },
+            { 'path': '*', component: sites_all_component_1.SitesAllComponent }
+        ]
+    },
+    {
+        'path': 'alarms',
+        children: [
+            { 'path': 'pending', component: alarms_pending_component_1.AlarmsPendingComponent },
+            { 'path': 'dispatch', component: alarms_dispatch_component_1.AlarmsDispatchComponent },
             { 'path': '*', component: sites_all_component_1.SitesAllComponent }
         ]
     },
@@ -132,13 +364,17 @@ var http_1 = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
 var app_routing_module_1 = __webpack_require__("./src/app/app-routing.module.ts");
 var app_component_1 = __webpack_require__("./src/app/app.component.ts");
 var login_component_1 = __webpack_require__("./src/app/login/login.component.ts");
-var login_service_1 = __webpack_require__("./src/app/login/login-service.ts");
-var sites_service_1 = __webpack_require__("./src/app/sites/sites-service.ts");
 var sites_component_1 = __webpack_require__("./src/app/sites/sites.component.ts");
 var sites_all_component_1 = __webpack_require__("./src/app/sites/sites-all/sites-all.component.ts");
 var sites_new_component_1 = __webpack_require__("./src/app/sites/sites-new/sites-new.component.ts");
 var sites_edit_component_1 = __webpack_require__("./src/app/sites/sites-edit/sites-edit.component.ts");
 var sites_single_detail_component_1 = __webpack_require__("./src/app/sites/sites-single-detail/sites-single-detail.component.ts");
+var alarms_component_1 = __webpack_require__("./src/app/alarms/alarms.component.ts");
+var alarms_pending_component_1 = __webpack_require__("./src/app/alarms/alarms-pending/alarms-pending.component.ts");
+var alarms_dispatch_component_1 = __webpack_require__("./src/app/alarms/alarms-dispatch/alarms-dispatch.component.ts");
+var login_service_1 = __webpack_require__("./src/app/login/login-service.ts");
+var sites_service_1 = __webpack_require__("./src/app/sites/sites-service.ts");
+var alarms_service_1 = __webpack_require__("./src/app/alarms/alarms-service.ts");
 function cookieStrategy() {
     console.log("******************************************************");
     var c = new http_1.CookieXSRFStrategy('csrftoken', 'X-CSRFToken');
@@ -158,7 +394,10 @@ var AppModule = /** @class */ (function () {
                 sites_all_component_1.SitesAllComponent,
                 sites_new_component_1.SitesNewComponent,
                 sites_edit_component_1.SitesEditComponent,
-                sites_single_detail_component_1.SitesSingleDetailComponent
+                sites_single_detail_component_1.SitesSingleDetailComponent,
+                alarms_component_1.AlarmsComponent,
+                alarms_pending_component_1.AlarmsPendingComponent,
+                alarms_dispatch_component_1.AlarmsDispatchComponent,
             ],
             imports: [
                 platform_browser_1.BrowserModule,
@@ -166,7 +405,7 @@ var AppModule = /** @class */ (function () {
                 http_1.HttpModule,
                 app_routing_module_1.AppRoutingModule,
             ],
-            providers: [sites_service_1.SitesService, login_service_1.LoginService, {
+            providers: [alarms_service_1.AlarmsService, login_service_1.LoginService, sites_service_1.SitesService, {
                     provide: http_1.XSRFStrategy,
                     useFactory: cookieStrategy,
                 }],

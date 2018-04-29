@@ -21,6 +21,8 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^sites/', include('apps.sites.urls',namespace='sites' , app_name='sites')),
+
     url(r'^employee/', include('apps.loginReg.urls',namespace='loginReg' , app_name='loginReg')),
     url(r'^$', serve,kwargs={'path': 'index.html'}),
     url(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',

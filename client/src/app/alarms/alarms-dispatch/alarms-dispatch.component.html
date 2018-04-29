@@ -1,0 +1,28 @@
+
+<div class="col-md-9 alarms">
+    <p class="errors" *ngFor="let error of error_messages">{{error}}</p>
+
+    <h1 class="primarycolor "><span>Dispatch Center</span></h1>
+    <form  #alarmForm="ngForm"  novalidate>
+      <div class="form-group "> 
+        <input 
+        class="form-control col-sm-4"
+        type="string" 
+        name="description"
+        required
+        [(ngModel)]="alarm.description"
+        #description="ngModel"
+        placeholder="Alarm"
+    /><br>
+    <button class="btn btn-primary col-sm-4" [disabled]="!alarmForm.form.valid" (click)="onDispatch()" >Dispatch</button>
+    </div>
+    
+     
+</form>
+</div>
+
+
+
+
+
+

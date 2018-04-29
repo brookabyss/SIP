@@ -7,13 +7,20 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import {LoginService } from './login/login-service';
-import {SitesService } from './sites/sites-service';
 import { SitesComponent } from './sites/sites.component';
 import { SitesAllComponent } from './sites/sites-all/sites-all.component';
 import { SitesNewComponent } from './sites/sites-new/sites-new.component';
 import { SitesEditComponent } from './sites/sites-edit/sites-edit.component';
 import { SitesSingleDetailComponent } from './sites/sites-single-detail/sites-single-detail.component';
+import { AlarmsComponent } from './alarms/alarms.component';
+import { AlarmsPendingComponent } from './alarms/alarms-pending/alarms-pending.component';
+import { AlarmsDispatchComponent } from './alarms/alarms-dispatch/alarms-dispatch.component';
+
+
+import {LoginService } from './login/login-service';
+import {SitesService } from './sites/sites-service';
+import {AlarmsService } from './alarms/alarms-service';
+
 
 export function cookieStrategy() {
   console.log("******************************************************")
@@ -32,7 +39,11 @@ export function cookieStrategy() {
     SitesAllComponent,
     SitesNewComponent,
     SitesEditComponent,
-    SitesSingleDetailComponent
+    SitesSingleDetailComponent,
+    AlarmsComponent,
+    AlarmsPendingComponent,
+    AlarmsDispatchComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -41,7 +52,7 @@ export function cookieStrategy() {
     AppRoutingModule,
    
   ],
-  providers: [SitesService, LoginService,{
+  providers: [AlarmsService, LoginService, SitesService, {
         provide: XSRFStrategy,
         useFactory: cookieStrategy,
     }],
