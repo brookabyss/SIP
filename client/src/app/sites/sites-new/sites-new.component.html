@@ -26,7 +26,7 @@
      #site_code="ngModel"
      placeholder="Enter Site Code">
  </div>
- 
+
  <p>Site Monitored?</p>
  <div class="form-check form-check-inline">
   <input
@@ -92,7 +92,7 @@
      #line_3="ngModel"
      placeholder="Address">
  </div>
- 
+
  <div class="form-group">
    <label for="city">City</label>
    <input
@@ -105,20 +105,20 @@
      #city="ngModel"
      placeholder="City">
  </div>
- 
+
  <div class="form-group">
    <label for="region">Region/State</label>
    <input
      type="text"
      required
      class="form-control"
-     id="region"
-     name="city"
+     id="region_state"
+     name="region_state"
      [(ngModel)]="address.region"
-     #region="ngModel"
+     #region_state="ngModel"
      placeholder="Enter Region/State">
  </div>
- 
+
  <div class="form-group">
    <label for="country">Country</label>
    <input
@@ -131,7 +131,7 @@
      #country="ngModel"
      placeholder="Country">
  </div>
- 
+
  <div class="form-group">
    <label for="zipcode">Zip Code</label>
    <input
@@ -144,7 +144,7 @@
      #zipcode="ngModel"
      placeholder="Enter Zip Code">
  </div>
- 
+
  <div class="form-group">
    <label for="latitude">Latitude</label>
    <input
@@ -157,7 +157,7 @@
      #latitude="ngModel"
      placeholder="Enter Latitude">
  </div>
- 
+
  <div class="form-group">
    <label for="longitude">Longitude</label>
    <input
