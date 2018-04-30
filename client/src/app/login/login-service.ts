@@ -16,9 +16,9 @@ export class LoginService {
       this.observedUsers.next(users);
   }
   
-  login(user){
+  login(){
       console.log('login service');
-      return this._http.post('employee/login',user).map(data=>data.json()).toPromise();
+      return this._http.get('employee/login').map(data=>data.json()).toPromise();
   }
   
   

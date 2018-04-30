@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AlarmsService } from '../alarms-service';
 import { Alarm } from '../alarms'
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-alarms-dispatch',
@@ -10,7 +12,7 @@ import { Alarm } from '../alarms'
 export class AlarmsDispatchComponent implements OnInit {
   alarm: Alarm;
   sign_in_url;
-  constructor(private _alarmsService: AlarmsService) { }
+  constructor(private _alarmsService: AlarmsService, private _router: Router) { }
 
   ngOnInit() {
     this.alarm = new Alarm;
@@ -21,8 +23,8 @@ export class AlarmsDispatchComponent implements OnInit {
     console.log(this.alarm);
     this._alarmsService.dispatch(this.alarm)
     .then(data=>{
-     console.log(data);
-
+      data=JSON.parse(data);
+      window.location.href= data.status;
     })
     .catch(err=>{console.log(err)});
     

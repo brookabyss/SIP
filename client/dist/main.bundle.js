@@ -27,7 +27,7 @@ module.exports = ""
 /***/ "./src/app/alarms/alarms-dispatch/alarms-dispatch.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"col-md-9 alarms\">\n    <p class=\"errors\" *ngFor=\"let error of error_messages\">{{error}}</p>\n\n    <h1 class=\"primarycolor \"><span>Dispatch Center</span></h1>\n    <form  #alarmForm=\"ngForm\"  novalidate>\n      <div class=\"form-group \"> \n        <input \n        class=\"form-control col-sm-4\"\n        type=\"string\" \n        name=\"description\"\n        required\n        [(ngModel)]=\"alarm.description\"\n        #description=\"ngModel\"\n        placeholder=\"Alarm\"\n    /><br>\n    <button class=\"btn btn-primary col-sm-4\" [disabled]=\"!alarmForm.form.valid\" (click)=\"onDispatch()\" >Dispatch</button>\n    </div>\n    \n     \n</form>\n</div>\n\n\n\n\n\n\n"
+module.exports = "\n<div class=\"col-md-9 alarms\">\n    <p class=\"errors\" *ngFor=\"let error of error_messages\">{{error}}</p>\n\n    <h1 class=\"primarycolor \"><span>Dispatch Center</span></h1>\n    <form  #alarmForm=\"ngForm\"  novalidate>\n      <div class=\"form-group \"> \n        <input \n        class=\"form-control col-sm-4\"\n        type=\"string\" \n        name=\"description\"\n        required\n        [(ngModel)]=\"alarm.description\"\n        #description=\"ngModel\"\n        placeholder=\"Alarm\"\n    /><br>\n    <button class=\"btn btn-primary col-sm-4\" [disabled]=\"!alarmForm.form.valid\" (click)=\"onDispatch()\" >Dispatch</button>\n    </div>\n    \n     \n</form>\n</div>\n\n\n\n<a href=\"tel:+1-206-307-7360\">+1 206 307 7360</a>\n\n\n\n\n\n\n"
 
 /***/ }),
 
@@ -49,9 +49,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var alarms_service_1 = __webpack_require__("./src/app/alarms/alarms-service.ts");
 var alarms_1 = __webpack_require__("./src/app/alarms/alarms.ts");
+var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 var AlarmsDispatchComponent = /** @class */ (function () {
-    function AlarmsDispatchComponent(_alarmsService) {
+    function AlarmsDispatchComponent(_alarmsService, _router) {
         this._alarmsService = _alarmsService;
+        this._router = _router;
     }
     AlarmsDispatchComponent.prototype.ngOnInit = function () {
         this.alarm = new alarms_1.Alarm;
@@ -61,7 +63,8 @@ var AlarmsDispatchComponent = /** @class */ (function () {
         console.log(this.alarm);
         this._alarmsService.dispatch(this.alarm)
             .then(function (data) {
-            console.log(data);
+            data = JSON.parse(data);
+            window.location.href = data.status;
         })
             .catch(function (err) { console.log(err); });
     };
@@ -71,7 +74,7 @@ var AlarmsDispatchComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/alarms/alarms-dispatch/alarms-dispatch.component.html"),
             styles: [__webpack_require__("./src/app/alarms/alarms-dispatch/alarms-dispatch.component.css")]
         }),
-        __metadata("design:paramtypes", [alarms_service_1.AlarmsService])
+        __metadata("design:paramtypes", [alarms_service_1.AlarmsService, router_1.Router])
     ], AlarmsDispatchComponent);
     return AlarmsDispatchComponent;
 }());
@@ -447,9 +450,9 @@ var LoginService = /** @class */ (function () {
     LoginService.prototype.updateUsers = function (users) {
         this.observedUsers.next(users);
     };
-    LoginService.prototype.login = function (user) {
+    LoginService.prototype.login = function () {
         console.log('login service');
-        return this._http.post('employee/login', user).map(function (data) { return data.json(); }).toPromise();
+        return this._http.get('employee/login').map(function (data) { return data.json(); }).toPromise();
     };
     LoginService = __decorate([
         core_1.Injectable(),
@@ -472,7 +475,7 @@ module.exports = ""
 /***/ "./src/app/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"col-md-9 login_container\">\n    <p class=\"errors\" *ngFor=\"let error of error_messages\">{{error}}</p>\n\n    <h1 class=\"primarycolor form-title\"><span>Login</span></h1>\n    <form  #loginForm=\"ngForm\"  novalidate>\n      <div class=\"form-group \"> \n        <input \n        class=\"form-control col-sm-4\"\n        type=\"string\" \n        name=\"login\"\n        required\n        [(ngModel)]=\"user.login\"\n        #login=\"ngModel\"\n        placeholder=\"User Login\"\n    /><br>\n    <input \n        class=\"form-control col-sm-4\"\n        type=\"password\" \n        name=\"user_password\"\n        required\n        [(ngModel)]=\"user.password\"\n        #user_password=\"ngModel\"\n        placeholder=\"Password\"\n    /><br>\n    <button class=\"btn btn-primary col-sm-4\" [disabled]=\"!loginForm.form.valid\" (click)=\"onLogin()\">Login</button>\n    </div>\n    \n     \n</form>\n</div>\n"
+module.exports = "<button  type=\"button\" class=\"btn btn-primary\" (click)=\"getOutlook()\">\n  Outlook Login\n</button>\n\n"
 
 /***/ }),
 
@@ -501,10 +504,21 @@ var LoginComponent = /** @class */ (function () {
     LoginComponent.prototype.ngOnInit = function () {
         this.user = new user_1.User;
     };
-    LoginComponent.prototype.onLogin = function () {
-        console.log(this.user);
-        this._loginservice.login(this.user)
-            .then(function (data) { return console.log(data); })
+    /* onLogin(){
+       console.log(this.user);
+       this._loginservice.login(this.user)
+       .then(data=>console.log(data))
+       .catch(err=>console.log(err));
+     }
+   
+   */
+    LoginComponent.prototype.getOutlook = function () {
+        this._loginservice.login()
+            .then(function (data) {
+            console.log(data);
+            data = JSON.parse(data);
+            window.location.href = data.status;
+        })
             .catch(function (err) { return console.log(err); });
     };
     LoginComponent.prototype.ngOnDestroy = function () {

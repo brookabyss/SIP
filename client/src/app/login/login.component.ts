@@ -18,13 +18,26 @@ export class LoginComponent implements OnDestroy {
     this.user= new User;
   }
   
-  onLogin(){
+ /* onLogin(){
     console.log(this.user);
     this._loginservice.login(this.user)
     .then(data=>console.log(data))
     .catch(err=>console.log(err));
   }
-  
+
+*/
+getOutlook(){
+  this._loginservice.login()
+  .then(data=>{
+    console.log(data);
+    data=JSON.parse(data);
+    window.location.href= data.status;
+    
+  }
+  )
+  .catch(err=>console.log(err));
+}
+
   ngOnDestroy(){
     
   }

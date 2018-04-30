@@ -1,31 +1,4 @@
+<button  type="button" class="btn btn-primary" (click)="getOutlook()">
+  Outlook Login
+</button>
 
-<div class="col-md-9 login_container">
-    <p class="errors" *ngFor="let error of error_messages">{{error}}</p>
-
-    <h1 class="primarycolor form-title"><span>Login</span></h1>
-    <form  #loginForm="ngForm"  novalidate>
-      <div class="form-group "> 
-        <input 
-        class="form-control col-sm-4"
-        type="string" 
-        name="login"
-        required
-        [(ngModel)]="user.login"
-        #login="ngModel"
-        placeholder="User Login"
-    /><br>
-    <input 
-        class="form-control col-sm-4"
-        type="password" 
-        name="user_password"
-        required
-        [(ngModel)]="user.password"
-        #user_password="ngModel"
-        placeholder="Password"
-    /><br>
-    <button class="btn btn-primary col-sm-4" [disabled]="!loginForm.form.valid" (click)="onLogin()">Login</button>
-    </div>
-    
-     
-</form>
-</div>

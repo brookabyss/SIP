@@ -1,4 +1,4 @@
-
+from .appsettings import client_id, client_secret
 import urllib
 import base64
 import json
@@ -6,8 +6,8 @@ import time
 import requests
 
 # Client ID and secret
-client_id = '4b13fb9d-4fe5-4e48-82c5-21f3eee4e0f3'
-client_secret = 'lvcdNJSX212|tcaSQI40])$'
+client_id = client_id
+client_secret = client_secret
 
 # Constant strings for OAuth2 flow
 # The OAuth authority
