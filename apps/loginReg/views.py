@@ -20,7 +20,7 @@ def login(request):
     redirect_uri = request.build_absolute_uri(reverse('sites:gettoken'))
     sign_in_url = get_signin_url(redirect_uri)
     print redirect_uri
-    return Response(json.dumps({'status':sign_in_url}))
+    return Response(json.dumps({'sign_in_url':sign_in_url}))
     
 
 # Create your views here.

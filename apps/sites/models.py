@@ -9,6 +9,7 @@ class Address(models.Model):
     line_2=models.CharField(max_length=255)
     line_3=models.CharField(max_length=255)
     city=models.CharField(max_length=80)
+    region_state=models.CharField(max_length=100)
     country=models.CharField(max_length=60)
     zipcode=models.CharField(max_length=15)
     other_details=models.CharField(max_length=255)

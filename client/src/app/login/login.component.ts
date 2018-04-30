@@ -31,7 +31,7 @@ getOutlook(){
   .then(data=>{
     console.log(data);
     data=JSON.parse(data);
-    window.location.href= data.status;
+    window.location.href= data.sign_in_url;
     
   }
   )

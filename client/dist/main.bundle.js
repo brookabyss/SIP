@@ -517,7 +517,7 @@ var LoginComponent = /** @class */ (function () {
             .then(function (data) {
             console.log(data);
             data = JSON.parse(data);
-            window.location.href = data.status;
+            window.location.href = data.sign_in_url;
         })
             .catch(function (err) { return console.log(err); });
     };
@@ -538,6 +538,38 @@ exports.LoginComponent = LoginComponent;
 
 /***/ }),
 
+/***/ "./src/app/sites/address.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Address = /** @class */ (function () {
+    function Address() {
+    }
+    return Address;
+}());
+exports.Address = Address;
+
+
+/***/ }),
+
+/***/ "./src/app/sites/site.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Site = /** @class */ (function () {
+    function Site() {
+    }
+    return Site;
+}());
+exports.Site = Site;
+
+
+/***/ }),
+
 /***/ "./src/app/sites/sites-all/sites-all.component.css":
 /***/ (function(module, exports) {
 
@@ -548,7 +580,7 @@ module.exports = ""
 /***/ "./src/app/sites/sites-all/sites-all.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<table class=\"table\">\n  <thead class=\"thead-dark\">\n    <tr>\n      <th scope=\"col\">Site Code</th>\n      <th scope=\"col\">Site Name</th>\n      <th scope=\"col\">Region</th>\n      <th scope=\"col\">Address</th>\n      <th scope=\"col\">Latitude</th>\n      <th scope=\"col\">Longitude</th>\n      <th scope=\"col\">ASM</th>\n      <th scope=\"col\">RSM</th>\n    </tr>\n  </thead>\n  <tbody>\n    \n  </tbody>\n</table>"
+module.exports = "<nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n  <a class=\"navbar-brand\" href=\"#\">Navbar</a>\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n    <span class=\"navbar-toggler-icon\"></span>\n  </button>\n  <div class=\"collapse navbar-collapse\" id=\"navbarNav\">\n    <ul class=\"navbar-nav\">\n      <li class=\"nav-item active\">\n        <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"nav-link\" [routerLink]=\"['/sites/new']\">New Site</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"nav-link\" [routerLink]=\"['/alarms/dispatch']\">Alarm Dispatch</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"nav-link\" [routerLink]=\"['/alarms/dispatch']\">Pending Alarms</a>\n      </li>\n    </ul>\n  </div>\n</nav>\n<table class=\"table table-sm\">\n  <thead class=\"thead-dark\">\n    <tr>\n      <th scope=\"col\">Site Code</th>\n      <th scope=\"col\">Site Name</th>\n      <th scope=\"col\">Region</th>\n      <th scope=\"col\">Address</th>\n      <th scope=\"col\">Latitude</th>\n      <th scope=\"col\">Longitude</th>\n      <th scope=\"col\">ASM</th>\n      <th scope=\"col\">RSM</th>\n    </tr>\n  </thead>\n  <tbody>\n    \n  </tbody>\n</table>"
 
 /***/ }),
 
@@ -641,14 +673,14 @@ exports.SitesEditComponent = SitesEditComponent;
 /***/ "./src/app/sites/sites-new/sites-new.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "input{\n    width: 70%;\n}\n\nform,.form-title{\n   \n    padding: 2%;\n}\n\n.site-form-container{\n    border: orange 1px solid;\n     margin-left: 20%;\n     width: 70%;\n}\n\n.form-check-label{\n    margin-left: 30%;\n}\n\n.radio{\n    width: 100px;\n    border: 1px solid red;\n}"
 
 /***/ }),
 
 /***/ "./src/app/sites/sites-new/sites-new.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  sites-new works!\n</p>\n"
+module.exports = "<div class=\"site-form-container\">\n <h1 class=\"form-title\">New Site</h1>\n\n<form #siteForm=\"ngForm\" novalidate>\n <div class=\"form-group form-group-sm\">\n   <label for=\"site_name\">Site Name</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_name\"\n     name=\"site_name\"\n     [(ngModel)]=\"site.site_name\"\n     #site_name=\"ngModel\"\n     placeholder=\"Enter Site Name\">\n </div>\n <div class=\"form-group\">\n   <label for=\"site_code\">Site Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_code\"\n     name=\"site_code\"\n     [(ngModel)]=\"site.site_code\"\n     #site_code=\"ngModel\"\n     placeholder=\"Enter Site Code\">\n </div>\n \n <p>Site Monitored?</p>\n <div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox1\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  value=\"1\">\n  <label class=\"form-check-label\" for=\"inlineCheckbox1\">Yes</label>\n</div>\n\n<div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  [value]=\"0\">\n  <label class=\"form-check-label\" for=\"inlineCheckbox1\">No</label>\n</div>\n<br>\n<br>\n<h6>Address Section:</h6>\n<h6>Address:</h6>\n<div class=\"form-group\">\n   <label for=\"line_1\">Line 1</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"line_1\"\n     name=\"line_1\"\n     [(ngModel)]=\"address.line_1\"\n     #line_1=\"ngModel\"\n     placeholder=\"Enter Address\">\n </div>\n <div class=\"form-group\">\n   <label for=\"line_2\">Line 2</label>\n   <input\n     type=\"text\"\n     class=\"form-control\"\n     id=\"line_2\"\n     name=\"line_2\"\n     [(ngModel)]=\"address.line_2\"\n     #line_2=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"line_3\">Line 3</label>\n   <input\n     type=\"text\"\n     class=\"form-control\"\n     id=\"line_3\"\n     name=\"line_3\"\n     [(ngModel)]=\"address.line_3\"\n     #line_3=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"city\">City</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"city\"\n     name=\"city\"\n     [(ngModel)]=\"address.city\"\n     #city=\"ngModel\"\n     placeholder=\"City\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"region\">Region/State</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"region\"\n     name=\"city\"\n     [(ngModel)]=\"address.region\"\n     #region=\"ngModel\"\n     placeholder=\"Enter Region/State\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"country\">Country</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"country\"\n     name=\"country\"\n     [(ngModel)]=\"address.country\"\n     #country=\"ngModel\"\n     placeholder=\"Country\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"zipcode\">Zip Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"zipcode\"\n     name=\"zipcode\"\n     [(ngModel)]=\"address.zipcode\"\n     #zipcode=\"ngModel\"\n     placeholder=\"Enter Zip Code\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"latitude\">Latitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"latitude\"\n     name=\"latitude\"\n     [(ngModel)]=\"address.latitude\"\n     #latitude=\"ngModel\"\n     placeholder=\"Enter Latitude\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"longitude\">Longitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"longitude\"\n     name=\"longitude\"\n     [(ngModel)]=\"address.longitude\"\n     #longitude=\"ngModel\"\n     placeholder=\"Enter Longitude\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"other_details\">Other Details</label>\n   <input\n     type=\"text\"\n     class=\"form-control\"\n     id=\"other_details\"\n     name=\"other_details\"\n     [(ngModel)]=\"address.other_details\"\n     #other_details=\"ngModel\"\n     placeholder=\"Enter Other Details\">\n </div>\n\n\n <button [disabled]=\"!siteForm.form.valid\" (click)=\"addSite()\" class=\"btn btn-primary\">Submit</button>\n</form>\n\n\n</div>"
 
 /***/ }),
 
@@ -668,10 +700,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var site_1 = __webpack_require__("./src/app/sites/site.ts");
+var address_1 = __webpack_require__("./src/app/sites/address.ts");
+var sites_service_1 = __webpack_require__("./src/app/sites/sites-service.ts");
 var SitesNewComponent = /** @class */ (function () {
-    function SitesNewComponent() {
+    function SitesNewComponent(_sitesService) {
+        this._sitesService = _sitesService;
     }
     SitesNewComponent.prototype.ngOnInit = function () {
+        this.site = new site_1.Site;
+        this.address = new address_1.Address;
+    };
+    SitesNewComponent.prototype.addSite = function () {
+        console.dir(this.address);
+        console.dir(this.site);
+        this._sitesService.addSite(this.site, this.address)
+            .then(function (data) {
+            console.log(data);
+        })
+            .catch(function (err) {
+            console.log(err);
+        });
     };
     SitesNewComponent = __decorate([
         core_1.Component({
@@ -679,7 +728,7 @@ var SitesNewComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/sites/sites-new/sites-new.component.html"),
             styles: [__webpack_require__("./src/app/sites/sites-new/sites-new.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [sites_service_1.SitesService])
     ], SitesNewComponent);
     return SitesNewComponent;
 }());
@@ -715,6 +764,9 @@ var SitesService = /** @class */ (function () {
     }
     SitesService.prototype.updateSites = function (sites) {
         this.observedSites.next(sites);
+    };
+    SitesService.prototype.addSite = function (site, address) {
+        return this._http.post('/sites/new', { site: site, address: address }).map(function (data) { return data.json(); }).toPromise();
     };
     SitesService = __decorate([
         core_1.Injectable(),

@@ -8,11 +8,17 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from ..authhelper import get_signin_url,get_access_token,get_token_from_code
 from ..outlookservice import get_my_events,get_me,get_my_messages,send_my_email
+from django.shortcuts import redirect
 
 import json;
 import codecs;
 import time;
 
+
+@api_view(['POST'])
+def newSite(request):
+    print(request.body)
+    return Response(json.dumps({'status':True}))
 
 @api_view(['POST'])
 def dispatch(request):
@@ -44,7 +50,8 @@ def gettoken(request):
   request.session['refresh_token'] = refresh_token
   request.session['token_expires'] = expiration
   #return HttpResponse('User: {0}, Access token: {1}'.format(user['displayName'], access_token))
-  return HttpResponseRedirect(reverse('sites:sendmail'))
+  #return HttpResponseRedirect(reverse('sites:sendmail'))
+  return redirect('/#/sites')
 
   
   
@@ -82,4 +89,3 @@ def sendMail(request):
     print("send email")
     messages = send_my_email(access_token)
     return HttpResponse('Messages: {0}'.format(messages))
-  
