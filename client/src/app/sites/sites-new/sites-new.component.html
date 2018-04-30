@@ -1,3 +1,56 @@
-<p>
-  sites-new works!
-</p>
+<form #siteForm="ngForm" novalidate>
+ <div class="form-group">
+   <label for="site_name">Site Name</label>
+   <input
+     type="text"
+     required
+     class="form-control"
+     id="site_name"
+     name="site_name"
+     [(ngModel)]="site.site_name"
+     #site_name="ngModel"
+     placeholder="Enter Site Name">
+ </div>
+ <div class="form-group">
+   <label for="site_code">Site Code</label>
+   <input
+     type="text"
+     required
+     class="form-control"
+     id="site_code"
+     name="site_code"
+     [(ngModel)]="site.site_code"
+     #site_code="ngModel"
+     placeholder="Enter Site Code">
+ </div>
+ <div class="form-group">
+   <label for="site_name">Site Name</label>
+   <input
+     type="text"
+     required
+     class="form-control"
+     id="site_name"
+     name="site_name"
+     [(ngModel)]="site.site_name"
+     #site_name="ngModel"
+     placeholder="Enter Site Name">
+ </div>
+ <p>Site Monitored?</p>
+ <div class="form-check form-check-inline">
+  <input
+  class="form-check-input"
+  type="checkbox"
+  id="inlineCheckbox1"
+  name="monitored_zone"
+  required
+  [(ngModel)]="site.monitored_zone"
+  #monitored_zone="ngModel"
+  value="1">
+  <label class="form-check-label" for="inlineCheckbox1">Yes</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="0">
+  <label class="form-check-label" for="inlineCheckbox2">2</label>
+</div>
+ <button type="submit" class="btn btn-primary">Submit</button>
+</form>

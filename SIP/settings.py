@@ -27,9 +27,9 @@ SECRET_KEY = 'j!(6i0#2p@+qlf!d-hbie9+sj=7-!obcla=p2o&pe^b6u-y_qw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sip-brookabyss.c9users.io']
+ALLOWED_HOSTS = ['sip-brookabyss.c9users.io','localhost']
 
-CORS_ORIGIN_ALLOW_ALL = True     
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
