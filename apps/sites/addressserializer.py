@@ -3,7 +3,7 @@ from .models import Address
 
 class AddressSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    address_id=serializers.PrimaryKeyRelatedField(read_only=True)
+    site_id=serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     line_1=serializers.CharField(read_only=True)
     line_2=serializers.CharField(read_only=True)
     line_3=serializers.CharField(read_only=True)
@@ -12,10 +12,6 @@ class AddressSerializer(serializers.Serializer):
     country=serializers.CharField(read_only=True)
     other_details=serializers.CharField(read_only=True)
     zipcode=serializers.CharField(read_only=True)
-
-
-
-    
     created_at=serializers.DateTimeField()
     updated_at=serializers.DateTimeField()
     

@@ -468,14 +468,14 @@ exports.LoginService = LoginService;
 /***/ "./src/app/login/login.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".login_container{\n    position: absolute;\n    left: 50%;\n    top: 50%;\n}"
 
 /***/ }),
 
 /***/ "./src/app/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<button  type=\"button\" class=\"btn btn-primary\" (click)=\"getOutlook()\">\n  Outlook Login\n</button>\n\n"
+module.exports = "<div class=\"login_container\">\n    \n<button  type=\"button\" class=\"btn btn-primary \" (click)=\"getOutlook()\">\n  Outlook Login\n</button>\n\n\n</div>"
 
 /***/ }),
 
@@ -673,14 +673,14 @@ exports.SitesEditComponent = SitesEditComponent;
 /***/ "./src/app/sites/sites-new/sites-new.component.css":
 /***/ (function(module, exports) {
 
-module.exports = "input{\n    width: 70%;\n}\n\nform,.form-title{\n   \n    padding: 2%;\n}\n\n.site-form-container{\n    border: orange 1px solid;\n     margin-left: 20%;\n     width: 70%;\n}\n\n.form-check-label{\n    margin-left: 30%;\n}\n\n.radio{\n    width: 100px;\n    border: 1px solid red;\n}"
+module.exports = "input{\n    width: 70%;\n}\n\nform,.form-title{\n   \n    padding: 2%;\n}\n\n.site-form-container{\n    border: orange 1px solid;\n     margin-left: 20%;\n     width: 70%;\n}\n\n.form-check-label{\n    margin-left: 30%;\n}\n\n.radio{\n    width: 100px;\n    border: 1px solid red;\n}\n\n.orange{\n    border: .5px solid #fd5d00 ;\n    background: #f7780f ;\n}"
 
 /***/ }),
 
 /***/ "./src/app/sites/sites-new/sites-new.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"site-form-container\">\n <h1 class=\"form-title\">New Site</h1>\n\n<form #siteForm=\"ngForm\" novalidate>\n <div class=\"form-group form-group-sm\">\n   <label for=\"site_name\">Site Name</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_name\"\n     name=\"site_name\"\n     [(ngModel)]=\"site.site_name\"\n     #site_name=\"ngModel\"\n     placeholder=\"Enter Site Name\">\n </div>\n <div class=\"form-group\">\n   <label for=\"site_code\">Site Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_code\"\n     name=\"site_code\"\n     [(ngModel)]=\"site.site_code\"\n     #site_code=\"ngModel\"\n     placeholder=\"Enter Site Code\">\n </div>\n \n <p>Site Monitored?</p>\n <div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox1\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  value=\"1\">\n  <label class=\"form-check-label\" for=\"inlineCheckbox1\">Yes</label>\n</div>\n\n<div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  [value]=\"0\">\n  <label class=\"form-check-label\" for=\"inlineCheckbox1\">No</label>\n</div>\n<br>\n<br>\n<h6>Address Section:</h6>\n<h6>Address:</h6>\n<div class=\"form-group\">\n   <label for=\"line_1\">Line 1</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"line_1\"\n     name=\"line_1\"\n     [(ngModel)]=\"address.line_1\"\n     #line_1=\"ngModel\"\n     placeholder=\"Enter Address\">\n </div>\n <div class=\"form-group\">\n   <label for=\"line_2\">Line 2</label>\n   <input\n     type=\"text\"\n     class=\"form-control\"\n     id=\"line_2\"\n     name=\"line_2\"\n     [(ngModel)]=\"address.line_2\"\n     #line_2=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"line_3\">Line 3</label>\n   <input\n     type=\"text\"\n     class=\"form-control\"\n     id=\"line_3\"\n     name=\"line_3\"\n     [(ngModel)]=\"address.line_3\"\n     #line_3=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"city\">City</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"city\"\n     name=\"city\"\n     [(ngModel)]=\"address.city\"\n     #city=\"ngModel\"\n     placeholder=\"City\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"region\">Region/State</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"region\"\n     name=\"city\"\n     [(ngModel)]=\"address.region\"\n     #region=\"ngModel\"\n     placeholder=\"Enter Region/State\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"country\">Country</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"country\"\n     name=\"country\"\n     [(ngModel)]=\"address.country\"\n     #country=\"ngModel\"\n     placeholder=\"Country\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"zipcode\">Zip Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"zipcode\"\n     name=\"zipcode\"\n     [(ngModel)]=\"address.zipcode\"\n     #zipcode=\"ngModel\"\n     placeholder=\"Enter Zip Code\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"latitude\">Latitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"latitude\"\n     name=\"latitude\"\n     [(ngModel)]=\"address.latitude\"\n     #latitude=\"ngModel\"\n     placeholder=\"Enter Latitude\">\n </div>\n \n <div class=\"form-group\">\n   <label for=\"longitude\">Longitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"longitude\"\n     name=\"longitude\"\n     [(ngModel)]=\"address.longitude\"\n     #longitude=\"ngModel\"\n     placeholder=\"Enter Longitude\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"other_details\">Other Details</label>\n   <input\n     type=\"text\"\n     class=\"form-control\"\n     id=\"other_details\"\n     name=\"other_details\"\n     [(ngModel)]=\"address.other_details\"\n     #other_details=\"ngModel\"\n     placeholder=\"Enter Other Details\">\n </div>\n\n\n <button [disabled]=\"!siteForm.form.valid\" (click)=\"addSite()\" class=\"btn btn-primary\">Submit</button>\n</form>\n\n\n</div>"
+module.exports = "\n<div class=\"site-form-container\">\n<nav class=\"navbar navbar-light\" style=\"background-color: #e3f2fd;\">\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:this.pages['general_info']}\"  (click)=\"swicthPages('general_info')\">General Info</div>\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:this.pages['address']}\"  (click)=\"swicthPages('address')\">Address</div>\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:this.pages['poc']}\"  (click)=\"swicthPages('poc')\">POC</div>\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:this.pages['confirm']}\"  (click)=\"swicthPages('confirm')\">Confirm</div>\n</nav>\n <h1 class=\"form-title\">New Site</h1>\n<div *ngIf=\"this.pages['general_info']\">\n\n<form #siteForm=\"ngForm\" novalidate>\n <div class=\"form-group form-group-sm\">\n   <label for=\"site_name\">Site Name</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_name\"\n     name=\"site_name\"\n     [(ngModel)]=\"site.site_name\"\n     #site_name=\"ngModel\"\n     placeholder=\"Enter Site Name\">\n </div>\n <div class=\"form-group\">\n   <label for=\"site_code\">Site Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_code\"\n     name=\"site_code\"\n     [(ngModel)]=\"site.site_code\"\n     #site_code=\"ngModel\"\n     placeholder=\"Enter Site Code\">\n </div>\n\n <p>Site Monitored?</p>\n <div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox1\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  value=\"1\">\n  <label class=\"form-check-label\" for=\"inlineCheckbox1\">Yes</label>\n</div>\n\n<div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  [value]=\"0\">\n  <label class=\"form-check-label\" for=\"inlineCheckbox1\">No</label>\n</div>\n<br>\n<br>\n\n\n <button [disabled]=\"!siteForm.form.valid\" (click)=\"addSite()\" class=\"btn btn-primary\">Submit</button>\n</form>\n\n</div>\n\n\n<div *ngIf=\"this.pages['address']\">\n<h6>Address Section:</h6>\n<h6>Address:</h6>\n\n<form #addressForm=\"ngForm\" novalidate>\n   \n<div class=\"form-group\">\n   <label for=\"line_1\">Line 1</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"line_1\"\n     name=\"line_1\"\n     [(ngModel)]=\"address.line_1\"\n     #line_1=\"ngModel\"\n     placeholder=\"Enter Address\">\n </div>\n <div class=\"form-group\">\n   <label for=\"line_2\">Line 2</label>\n   <input\n     type=\"text\"\n     class=\"form-control\"\n     id=\"line_2\"\n     name=\"line_2\"\n     [(ngModel)]=\"address.line_2\"\n     #line_2=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"line_3\">Line 3</label>\n   <input\n     type=\"text\"\n     class=\"form-control\"\n     id=\"line_3\"\n     name=\"line_3\"\n     [(ngModel)]=\"address.line_3\"\n     #line_3=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"city\">City</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"city\"\n     name=\"city\"\n     [(ngModel)]=\"address.city\"\n     #city=\"ngModel\"\n     placeholder=\"City\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"region\">Region/State</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"region_state\"\n     name=\"region_state\"\n     [(ngModel)]=\"address.region_state\"\n     #region_state=\"ngModel\"\n     placeholder=\"Enter Region/State\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"country\">Country</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"country\"\n     name=\"country\"\n     [(ngModel)]=\"address.country\"\n     #country=\"ngModel\"\n     placeholder=\"Country\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"zipcode\">Zip Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"zipcode\"\n     name=\"zipcode\"\n     [(ngModel)]=\"address.zipcode\"\n     #zipcode=\"ngModel\"\n     placeholder=\"Enter Zip Code\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"latitude\">Latitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"latitude\"\n     name=\"latitude\"\n     [(ngModel)]=\"address.latitude\"\n     #latitude=\"ngModel\"\n     placeholder=\"Enter Latitude\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"longitude\">Longitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"longitude\"\n     name=\"longitude\"\n     [(ngModel)]=\"address.longitude\"\n     #longitude=\"ngModel\"\n     placeholder=\"Enter Longitude\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"other_details\">Other Details</label>\n   <input\n     type=\"text\"\n     class=\"form-control\"\n     id=\"other_details\"\n     name=\"other_details\"\n     [(ngModel)]=\"address.other_details\"\n     #other_details=\"ngModel\"\n     placeholder=\"Enter Other Details\">\n </div>\n\n</form>\n\n</div>\n\n<div *ngIf=\"this.pages['poc']\">\n    <form #pocForm=\"ngForm\" novalidate>\n        <select class=\"form-control form-control-sm\" name=\"poc_type\" id=\"\">\n            <option value=\"\">Choose POC Type</option>\n            <option value=\"ASM\">ASM</option>\n            <option value=\"General Alarm Responder\">General Alarm Responder</option>\n            \n        </select>\n        \n        \n    </form>\n</div>\n\n\n\n</div>\n\n"
 
 /***/ }),
 
@@ -710,6 +710,12 @@ var SitesNewComponent = /** @class */ (function () {
     SitesNewComponent.prototype.ngOnInit = function () {
         this.site = new site_1.Site;
         this.address = new address_1.Address;
+        this.pages = {
+            general_info: true,
+            address: null,
+            poc: null,
+            confirm: null
+        };
     };
     SitesNewComponent.prototype.addSite = function () {
         console.dir(this.address);
@@ -717,10 +723,20 @@ var SitesNewComponent = /** @class */ (function () {
         this._sitesService.addSite(this.site, this.address)
             .then(function (data) {
             console.log(data);
+            console.log(data[0].address_id.line_1);
         })
             .catch(function (err) {
             console.log(err);
         });
+    };
+    SitesNewComponent.prototype.swicthPages = function (page) {
+        for (var key in this.pages) {
+            this.pages[key] = null;
+        }
+        this.pages[page] = true;
+    };
+    SitesNewComponent.prototype.addAddress = function () {
+        this.address.form_status = true;
     };
     SitesNewComponent = __decorate([
         core_1.Component({
@@ -766,7 +782,7 @@ var SitesService = /** @class */ (function () {
         this.observedSites.next(sites);
     };
     SitesService.prototype.addSite = function (site, address) {
-        return this._http.post('/sites/new', { site: site, address: address }).map(function (data) { return data.json(); }).toPromise();
+        return this._http.post('/sites/new', { 'site': site, 'address': address }).map(function (data) { return data.json(); }).toPromise();
     };
     SitesService = __decorate([
         core_1.Injectable(),

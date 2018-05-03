@@ -18,12 +18,15 @@ class Address(models.Model):
 
     def __str__(self):
         return self.line_1+" , "+self.city
+        
+    class Meta:
+        verbose_name_plural = "addresses"
 
 
 class Site(models.Model):
     site_name=models.CharField(max_length=255)
     site_code=models.CharField(max_length=45)
-    monitored_zone=models.BooleanField(default=False)
+    monitored_zone=models.BooleanField(default=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
     address_id=models.ForeignKey(Address,related_name="site_id")

@@ -4,7 +4,7 @@ export class Address{
     line_2: String;
     line_3: String;
     city: String;
-    region: String;
+    region_state: String;
     country: String;
     latitude: Number;
     longitude: Number;
@@ -12,4 +12,5 @@ export class Address{
     site_id: Number;
     created_at: Date;
     updated_at: Date;
+    form_status:Boolean;
 }

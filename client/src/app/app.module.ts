@@ -22,6 +22,7 @@ import {SitesService } from './sites/sites-service';
 import {AlarmsService } from './alarms/alarms-service';
 
 
+
 export function cookieStrategy() {
   console.log("******************************************************")
   var c=new CookieXSRFStrategy('csrftoken', 'X-CSRFToken')
@@ -43,6 +44,7 @@ export function cookieStrategy() {
     AlarmsComponent,
     AlarmsPendingComponent,
     AlarmsDispatchComponent,
+    
     
   ],
   imports: [

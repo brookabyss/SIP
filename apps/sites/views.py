@@ -10,15 +10,64 @@ from ..authhelper import get_signin_url,get_access_token,get_token_from_code
 from ..outlookservice import get_my_events,get_me,get_my_messages,send_my_email
 from django.shortcuts import redirect
 
+from .models import Site,Address
+from .addressserializer import AddressSerializer
+from .sitesserializer import SiteSerializer
 import json;
 import codecs;
 import time;
 
-
 @api_view(['POST'])
 def newSite(request):
     print(request.body)
-    return Response(json.dumps({'status':True}))
+    req= json.loads(request.body.decode('utf-8'))
+    if(request.method=="POST"):
+      addresses=Address.objects.filter(
+        line_1=req['address']['line_1'],
+        line_2=req['address']['line_2'],
+        line_3=req['address']['line_3'],
+        city=req['address']['city'],
+        region_state=req['address']['region_state'],
+        country=req['address']['country'],
+        zipcode=req['address']['zipcode'],
+        other_details=req['address']['other_details'],
+        )
+      if(len(addresses)==0):
+        Address.objects.create( 
+        line_1=req['address']['line_1'],
+        line_2=req['address']['line_2'],
+        line_3=req['address']['line_3'],
+        city=req['address']['city'],
+        region_state=req['address']['region_state'],
+        country=req['address']['country'],
+        zipcode=req['address']['zipcode'],
+        other_details=req['address']['other_details'],
+        )
+      address=Address.objects.latest("id")
+      sites=Site.objects.filter(
+        site_name=req['site']['site_name'],
+        site_code=req['site']['site_code'],
+        monitored_zone=req['site']['monitored_zone'],
+        address_id=address
+      )
+      if(len(sites)==0):
+        site=Site.objects.create(
+        site_name=req['site']['site_name'],
+        site_code=req['site']['site_code'],
+        monitored_zone=req['site']['monitored_zone'],
+        address_id=address
+      )
+        
+        #all_addresses=Address.objects.all()
+        
+        #serializedAddresses= AddressSerializer(all_addresses, many=True)
+        all_sites= Site.objects.all().select_related("address_id")
+        serializedSites= SiteSerializer(all_sites, many=True)
+        
+        
+    return Response(serializedSites.data)
+
+
 
 @api_view(['POST'])
 def dispatch(request):

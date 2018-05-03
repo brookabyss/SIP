@@ -1,5 +1,13 @@
+
 <div class="site-form-container">
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+  <div class="border col-sm-3" [ngClass]="{orange:this.pages['general_info']}"  (click)="swicthPages('general_info')">General Info</div>
+  <div class="border col-sm-3" [ngClass]="{orange:this.pages['address']}"  (click)="swicthPages('address')">Address</div>
+  <div class="border col-sm-3" [ngClass]="{orange:this.pages['poc']}"  (click)="swicthPages('poc')">POC</div>
+  <div class="border col-sm-3" [ngClass]="{orange:this.pages['confirm']}"  (click)="swicthPages('confirm')">Confirm</div>
+</nav>
  <h1 class="form-title">New Site</h1>
+<div *ngIf="this.pages['general_info']">
 
 <form #siteForm="ngForm" novalidate>
  <div class="form-group form-group-sm">
@@ -55,8 +63,20 @@
 </div>
 <br>
 <br>
+
+
+ <button [disabled]="!siteForm.form.valid" (click)="addSite()" class="btn btn-primary">Submit</button>
+</form>
+
+</div>
+
+
+<div *ngIf="this.pages['address']">
 <h6>Address Section:</h6>
 <h6>Address:</h6>
+
+<form #addressForm="ngForm" novalidate>
+   
 <div class="form-group">
    <label for="line_1">Line 1</label>
    <input
@@ -114,7 +134,7 @@
      class="form-control"
      id="region_state"
      name="region_state"
-     [(ngModel)]="address.region"
+     [(ngModel)]="address.region_state"
      #region_state="ngModel"
      placeholder="Enter Region/State">
  </div>
@@ -183,9 +203,24 @@
      placeholder="Enter Other Details">
  </div>
 
-
- <button [disabled]="!siteForm.form.valid" (click)="addSite()" class="btn btn-primary">Submit</button>
 </form>
+
+</div>
+
+<div *ngIf="this.pages['poc']">
+    <form #pocForm="ngForm" novalidate>
+        <select class="form-control form-control-sm" name="poc_type" id="">
+            <option value="">Choose POC Type</option>
+            <option value="ASM">ASM</option>
+            <option value="General Alarm Responder">General Alarm Responder</option>
+            
+        </select>
+        
+        
+    </form>
+</div>
+
 
 
 </div>
+

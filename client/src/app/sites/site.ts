@@ -6,4 +6,5 @@ export class Site{
     address_id: Number;
     created_at: Date;
     updated_at: Date;
+    form_status:Boolean;
 }

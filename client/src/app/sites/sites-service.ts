@@ -18,7 +18,7 @@ export class SitesService {
   
   
   addSite(site,address){
-    return this._http.post('/sites/new',{site:site,address:address}).map(data=>data.json()).toPromise();
+    return this._http.post('/sites/new',{'site':site,'address':address}).map(data=>data.json()).toPromise();
   }
   
   
