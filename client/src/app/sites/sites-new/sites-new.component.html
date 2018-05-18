@@ -1,15 +1,16 @@
 
 <div class="site-form-container">
 <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-  <div class="border col-sm-3" [ngClass]="{orange:this.pages['general_info']}"  (click)="swicthPages('general_info')">General Info</div>
-  <div class="border col-sm-3" [ngClass]="{orange:this.pages['address']}"  (click)="swicthPages('address')">Address</div>
-  <div class="border col-sm-3" [ngClass]="{orange:this.pages['poc']}"  (click)="swicthPages('poc')">POC</div>
-  <div class="border col-sm-3" [ngClass]="{orange:this.pages['confirm']}"  (click)="swicthPages('confirm')">Confirm</div>
+  <div class="border col-sm-3" [ngClass]="{orange:pages['general_info'], 'tabs':true}" (click)="swicthPages('general_info')">General Info</div>
+  <div class="border col-sm-3" [ngClass]="{orange:pages['address'],'tabs':true}" (click)="swicthPages('address')">Address</div>
+  <div class="border col-sm-3" [ngClass]="{orange:pages['poc'], 'tabs':true}" (click)="swicthPages('poc')">POC</div>
+  <div class="border col-sm-3" [ngClass]="{orange:pages['confirm'], 'tabs':true}" (click)="swicthPages('confirm')">Confirm</div>
 </nav>
- <h1 class="form-title">New Site</h1>
-<div *ngIf="this.pages['general_info']">
 
-<form #siteForm="ngForm" novalidate>
+
+ <h1 class="form-title">New Site</h1>
+
+<form #siteForm="ngForm" novalidate *ngIf="pages.general_info">
  <div class="form-group form-group-sm">
    <label for="site_name">Site Name</label>
    <input
@@ -40,13 +41,13 @@
   <input
   class="form-check-input radio"
   type="radio"
-  id="inlineCheckbox1"
+  id="inlineCheckbox"
   name="monitored_zone"
   required
   [(ngModel)]="site.monitored_zone"
   #monitored_zone="ngModel"
   value="1">
-  <label class="form-check-label" for="inlineCheckbox1">Yes</label>
+  <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">Yes</label>
 </div>
 
 <div class="form-check form-check-inline">
@@ -59,23 +60,79 @@
   [(ngModel)]="site.monitored_zone"
   #monitored_zone="ngModel"
   [value]="0">
-  <label class="form-check-label" for="inlineCheckbox1">No</label>
+  <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">No</label>
 </div>
 <br>
-<br>
+
+
+<div class="weekDays-selector">
+    <p>Select Business Days</p>
+  
+  <div class="day-time">
+      <input type="checkbox" id="weekday-mon" class="weekday" (click)="dayClicked(1)"/>
+      <label for="weekday-mon" >M</label>
+      <i class="fa fa-sun-o col col-3" aria-hidden="true" *ngIf="site.business_days[1].active" (click)="open(1,'start')"></i>
+      <i class="fa fa-moon-o col col-3" aria-hidden="true" *ngIf="site.business_days[1].active" (click)="open(1,'end')"></i>
+  </div>
+  <div class="day-time">
+      <input type="checkbox" id="weekday-tue" class="weekday" (click)="dayClicked(2)"/>
+      <label for="weekday-tue">T</label>
+       <i class="fa fa-sun-o col col-3" aria-hidden="true" *ngIf="site.business_days[2].active" (click)="open(2,'start')"></i>
+      <i class="fa fa-moon-o col col-3" aria-hidden="true" *ngIf="site.business_days[2].active" (click)="open(2,'end')"></i>
+ 
+  </div>
+  
+  <div class="day-time">
+       <input type="checkbox" id="weekday-wed" class="weekday" (click)="dayClicked(3)"/>
+       <label for="weekday-wed">W</label>
+       <i class="fa fa-sun-o col col-3" aria-hidden="true" *ngIf="site.business_days[3].active" (click)="open(3,'start')"></i>
+      <i class="fa fa-moon-o col col-3" aria-hidden="true" *ngIf="site.business_days[3].active" (click)="open(3,'end')"></i>
+  </div>
+ 
+  <div class="day-time">
+      <input type="checkbox" id="weekday-thu" class="weekday" (click)="dayClicked(4)"/>
+      <label for="weekday-thu">T</label>
+      <i class="fa fa-sun-o col col-3" aria-hidden="true" *ngIf="site.business_days[4].active" (click)="open(4,'start')"></i>
+      <i class="fa fa-moon-o col col-3" aria-hidden="true" *ngIf="site.business_days[4].active" (click)="open(4,'end')"></i>
+  </div>
+  
+  <div class="day-time">
+      <input type="checkbox" id="weekday-fri" class="weekday" (click)="dayClicked(5)"/>
+      <label for="weekday-fri">F</label>
+     <i class="fa fa-sun-o col col-3" aria-hidden="true" *ngIf="site.business_days[5].active" (click)="open(5,'start')"></i>
+     <i class="fa fa-moon-o col col-3" aria-hidden="true" *ngIf="site.business_days[5].active" (click)="open(5,'end')"></i>
+      
+  </div>
+  
+  <div class="day-time">
+      <input type="checkbox" id="weekday-sat" class="weekday" (click)="dayClicked(6)"/>
+      <label for="weekday-sat">S</label>
+      <i class="fa fa-sun-o col col-3" aria-hidden="true" *ngIf="site.business_days[6].active" (click)="open(6,'start')"></i>
+      <i class="fa fa-moon-o col col-3" aria-hidden="true" *ngIf="site.business_days[6].active" (click)="open(6,'end')"></i>
+  </div>
+  
+  <div class="day-time">
+      <input type="checkbox" id="weekday-sun" class="weekday" (click)="dayClicked(0)" />
+      <label for="weekday-sun">S</label>
+      <i class="fa fa-sun-o col col-3" aria-hidden="true" *ngIf="site.business_days[0].active" (click)="open(0,'start')"></i>
+      <i class="fa fa-moon-o col col-3" aria-hidden="true" *ngIf="site.business_days[0].active" (click)="open(0,'end')"></i>
+  </div>
+  
+ 
+</div>
+<input id="check_business_hours" type="checkbox" (change)="checkBusinessHours()"><label for="">Quick set business hours</label><br>
 
 
  <button [disabled]="!siteForm.form.valid" (click)="addSite()" class="btn btn-primary">Submit</button>
 </form>
 
-</div>
 
 
 <div *ngIf="this.pages['address']">
 <h6>Address Section:</h6>
 <h6>Address:</h6>
 
-<form #addressForm="ngForm" novalidate>
+<form #addressForm="ngForm" novalidate >
    
 <div class="form-group">
    <label for="line_1">Line 1</label>
@@ -202,25 +259,92 @@
      #other_details="ngModel"
      placeholder="Enter Other Details">
  </div>
+ 
+ <button >Add Address</button>
 
 </form>
 
 </div>
 
-<div *ngIf="this.pages['poc']">
-    <form #pocForm="ngForm" novalidate>
-        <select class="form-control form-control-sm" name="poc_type" id="">
-            <option value="">Choose POC Type</option>
-            <option value="ASM">ASM</option>
-            <option value="General Alarm Responder">General Alarm Responder</option>
-            
+<form #pocForm="ngForm" novalidate *ngIf="this.pages['poc']">
+    <label for="asm_email">ASM</label>
+    <input 
+        type="email"
+        required
+        name="asm_email"
+        [(ngModel)]="this.site.ASM"
+        #asm_email="ngModel"
+    >
+    <label for="rsm_email">RSM</label>
+    <input 
+        type="email"
+        required
+        name="rsm_email"
+        [(ngModel)]="this.site.RSM"
+        #rsm_email="ngModel"
+    >
+    <label for="">General Alarm Responder</label>
+        <select name="gar" id=""[(ngModel)]="this.GAR.poc_type" #gar="ngModel" class="form-control form-control-sm">
+         <option value="null">Choose POC Method</option>
+         <option value="email">Email</option>
+         <option value="cell">Cell Number</option>
+         <option value="office">Office Number</option>
         </select>
-        
-        
-    </form>
+    <label for="poc_value">POC Value</label><input class="form-control" type="text" required name="poc_value" [(ngModel)]="this.GAR.poc_value" #poc_value="ngModel"><br>
+
+
+
+<div class="form-check form-check-inline">
+  <input
+  class="form-check-input radio"
+  type="radio"
+  id="bh_check"
+  name="bh_check"
+  required
+  [(ngModel)]="this.GAR.available.bh"
+  #bh_check="ngModel"
+  [value]="true">
+  <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">Available Business Hours</label>
+</div>
+
+<div class="form-check form-check-inline">
+  <input
+  class="form-check-input radio"
+  type="radio"
+  id="ah_check"
+  name="ah_check"
+  required
+  [(ngModel)]="this.GAR.available.ah"
+  #ah_check="ngModel"
+  [value]="false">
+  <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">Available After Hours</label>
+</div>
+<i class="fa fa-plus" aria-hidden="true" (click)="addGAR()"></i>
+<table class="table table-sm">
+    <tr>
+        <th>Order of contact</th>
+        <th>Method of contact</th>
+        <th>Number/Email</th>
+    </tr>
+    <tr *appWhile="pocs,let contact">
+        <td>{{contact.order}}</td>
+        <td>{{contact.poc_type}}</td>
+        <td>{{contact.poc_value}}</td>
+    </tr>
+</table>
+    
+    <button [disabled]="!pocForm.form.valid" >Next Page</button>
+</form>
+
+
+
+
+
+
 </div>
 
 
 
-</div>
+
+
 

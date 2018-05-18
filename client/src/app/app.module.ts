@@ -3,7 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule} from '@angular/forms'
 import {HttpModule,XSRFStrategy,CookieXSRFStrategy } from '@angular/http'
 import { AppRoutingModule } from './app-routing.module';
-
+import { AmazingTimePickerModule } from 'amazing-time-picker'; // this line you need
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { WhileDirective } from './linkedlist-directive'
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -44,14 +46,16 @@ export function cookieStrategy() {
     AlarmsComponent,
     AlarmsPendingComponent,
     AlarmsDispatchComponent,
-    
-    
+    WhileDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AppRoutingModule,
+    AmazingTimePickerModule,
+    AngularFontAwesomeModule
+    
    
   ],
   providers: [AlarmsService, LoginService, SitesService, {

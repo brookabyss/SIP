@@ -1,17 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Site } from '../site'
 import { Address } from '../address'
 import { SitesService } from '../sites-service'
+import { POC } from '../poc'
+import { SLL } from '../linked_list/sll'
+import { Subscription } from 'rxjs/Subscription';
+
+
+import { AmazingTimePickerService } from 'amazing-time-picker'; 
+
+
+
+
 @Component({
   selector: 'app-sites-new',
   templateUrl: './sites-new.component.html',
   styleUrls: ['./sites-new.component.css']
 })
-export class SitesNewComponent implements OnInit {
+export class SitesNewComponent implements OnInit, OnDestroy {
+  
   site: Site;
-  address: Address
+  address: Address;
   pages: any;
-  constructor(private _sitesService: SitesService) { }
+  
+  // Area Secruity Manager (ASM)
+  ASM: POC;
+  //Regional Security Manager(RSM)
+  RSM: POC;
+  // General Alarm Responder (GAR)
+  GAR: POC;
+  pocs: SLL;
+  initial_order: number;
+  pocs_subscription: Subscription
+  
+  constructor(private _sitesService: SitesService, private atp: AmazingTimePickerService) { }
 
   ngOnInit() {
     this.site= new Site;
@@ -22,6 +44,24 @@ export class SitesNewComponent implements OnInit {
       poc:null,
       confirm:null
     }
+    
+    
+    /// POC linked list 
+    this.pocs_subscription= this._sitesService.observed_new_site_pocs.subscribe(
+      pocs => this.pocs = pocs,
+      err => console.log(err),
+      ()=>{}
+      )
+    this.GAR = new POC;
+    this.GAR.poc_name="GAR";
+    this.initial_order=0;
+    console.dir(this.pocs)
+    // this.pocs.insert(this.GAR);
+    // this.pocs.insert(GAR2)
+    // this.pocs.traverse()
+    
+    
+   
   }
   
   addSite(){
@@ -51,5 +91,42 @@ export class SitesNewComponent implements OnInit {
   addAddress(){
     this.address.form_status= true;
   }
+  
+  dayClicked(day){
+    this.site.business_days[day].active= !this.site.business_days[day].active
+    
+  }
+  
+  open(day,period) {
+    const amazingTimePicker = this.atp.open();
+    amazingTimePicker.afterClose().subscribe(time => {
+      console.log(time);
+      this.site.business_days[day][period]=time;
+      console.dir(this.site.business_days)
+    });
+  }
+  
+  checkBusinessHours(){
+    console.log("Business hours checked")
+  }
+  
+  
+  addGAR(){
+    console.log("add GAR")
+    this.initial_order +=1;
+    this.GAR.order = this.initial_order
+    this.pocs.insert(this.GAR)
+    this.pocs.last_changed= Date.now()
+    this._sitesService.updateNewSitePOCS(this.pocs);
+    this.GAR = new POC;
+    this.GAR.poc_name= "GAR"
+  }
+  
+   ngOnDestroy(){
+        
+    }
+    
+  
+  
 
 }
