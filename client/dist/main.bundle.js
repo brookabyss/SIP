@@ -702,6 +702,38 @@ var SLL = /** @class */ (function () {
             }
         }
     };
+    SLL.prototype.delete_node = function (poc) {
+        console.log("dleteing");
+        var temp;
+        if (poc.order) {
+            if (!this.head) {
+                console.log("empty list");
+                return false;
+            }
+            else if (this.head.poc.order === poc.order) {
+                temp = this.head;
+                this.head = this.head.next;
+                console.log("temp", temp);
+                return temp;
+            }
+            else {
+                var current = this.head, previous = this.head;
+                while (current) {
+                    if (current.poc.order === poc.order) {
+                        previous.next = current.next;
+                        return current;
+                    }
+                    previous = current, current = current.next;
+                }
+                console.log("value doesn't exit went through the list");
+                return false;
+            }
+        }
+        else {
+            console.log("please provide a node to remove");
+            return false;
+        }
+    };
     return SLL;
 }());
 exports.SLL = SLL;
@@ -956,7 +988,12 @@ var SitesNewComponent = /** @class */ (function () {
         console.log("add GAR");
         this.initial_order += 1;
         this.GAR.order = this.initial_order;
+        var GAR2 = new poc_1.POC;
+        GAR2.poc_name = "Test";
+        GAR2.order = 2;
         this.pocs.insert(this.GAR);
+        this.pocs.insert(GAR2);
+        this.pocs.delete_node(GAR2);
         this.pocs.last_changed = Date.now();
         this._sitesService.updateNewSitePOCS(this.pocs);
         this.GAR = new poc_1.POC;

@@ -115,7 +115,12 @@ export class SitesNewComponent implements OnInit, OnDestroy {
     console.log("add GAR")
     this.initial_order +=1;
     this.GAR.order = this.initial_order
+    let GAR2 = new POC;
+    GAR2.poc_name="Test";
+    GAR2.order =2; 
     this.pocs.insert(this.GAR)
+    this.pocs.insert(GAR2)
+    this.pocs.delete_node(GAR2)
     this.pocs.last_changed= Date.now()
     this._sitesService.updateNewSitePOCS(this.pocs);
     this.GAR = new POC;

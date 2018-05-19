@@ -1,5 +1,8 @@
 import { Node } from './node'
+import { POC } from '../poc'
 
+ 
+ 
 export class SLL{
     head: Node;
     last_changed: number;
@@ -44,5 +47,44 @@ export class SLL{
               current = current.next;
            }
         }
+    }
+    
+  
+
+
+    
+    delete_node(poc:POC){
+        console.log("dleteing")
+        let temp;
+        if(poc.order){
+            if(!this.head){
+                console.log("empty list")
+                return false;
+            }
+            else if(this.head.poc.order === poc.order){
+                temp = this.head;
+                this.head = this.head.next;
+                console.log("temp",temp)
+                return temp
+            }
+            else{
+                let current = this.head, previous=this.head
+                while(current){
+                    if(current.poc.order === poc.order){
+                        previous.next = current.next
+                        return current;
+                    }
+                    previous= current, current = current.next
+                }
+                console.log("value doesn't exit went through the list")
+                return false;
+            }
+        }
+        else{
+            console.log("please provide a node to remove")
+            return false;
+        }
+        
+        
     }
 }
