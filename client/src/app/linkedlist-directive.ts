@@ -13,7 +13,7 @@ export class WhileDirective implements  DoCheck, OnDestroy, OnInit {
     differ: any;
     subscription: Subscription
     constructor(private templateRef: TemplateRef<any>,private viewContainer: ViewContainerRef, private _sitesService: SitesService, private differs: KeyValueDiffers) { 
-        console.log("directive initialized")
+        // console.log("directive initialized")
         this.subscription= this._sitesService.observed_new_site_pocs.subscribe(
             pocs=>this._observedpocs=pocs,
             err=>console.log(err),
@@ -47,7 +47,7 @@ export class WhileDirective implements  DoCheck, OnDestroy, OnInit {
             this.viewContainer.clear()
             while(current){
                 if(current.poc){
-                    console.log("current.poc",current.poc)
+                    // console.log("current.poc",current.poc)
                     this.viewContainer.createEmbeddedView(this.templateRef, {$implicit:current.poc});
                 }
             current = current.next

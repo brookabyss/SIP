@@ -55,11 +55,7 @@ export class SitesNewComponent implements OnInit, OnDestroy {
     this.GAR = new POC;
     this.GAR.poc_name="GAR";
     this.initial_order=0;
-    console.dir(this.pocs)
-    // this.pocs.insert(this.GAR);
-    // this.pocs.insert(GAR2)
-    // this.pocs.traverse()
-    
+
     
    
   }
@@ -118,9 +114,14 @@ export class SitesNewComponent implements OnInit, OnDestroy {
     let GAR2 = new POC;
     GAR2.poc_name="Test";
     GAR2.order =2; 
+    let GAR3 = new POC;
+    GAR3.poc_name="Switch";
+    GAR3.order =3; 
     this.pocs.insert(this.GAR)
     this.pocs.insert(GAR2)
-    this.pocs.delete_node(GAR2)
+    this.pocs.insert(GAR3)
+    this.pocs.exchange_orders(GAR3,GAR2)
+    //this.pocs.delete_node(GAR2)
     this.pocs.last_changed= Date.now()
     this._sitesService.updateNewSitePOCS(this.pocs);
     this.GAR = new POC;

@@ -453,7 +453,7 @@ var WhileDirective = /** @class */ (function () {
         this.viewContainer = viewContainer;
         this._sitesService = _sitesService;
         this.differs = differs;
-        console.log("directive initialized");
+        // console.log("directive initialized")
         this.subscription = this._sitesService.observed_new_site_pocs.subscribe(function (pocs) { return _this._observedpocs = pocs; }, function (err) { return console.log(err); }, function () { });
     }
     WhileDirective.prototype.ngOnInit = function () {
@@ -476,7 +476,7 @@ var WhileDirective = /** @class */ (function () {
             this.viewContainer.clear();
             while (current) {
                 if (current.poc) {
-                    console.log("current.poc", current.poc);
+                    // console.log("current.poc",current.poc)
                     this.viewContainer.createEmbeddedView(this.templateRef, { $implicit: current.poc });
                 }
                 current = current.next;
@@ -681,12 +681,12 @@ var SLL = /** @class */ (function () {
         }
         else {
             var current = this.head;
-            console.log("Current", this.head);
+            // console.log("Current",this.head)
             while (current.next != null && current.poc.order < new_poc.order) {
                 current = current.next;
             }
             current.next = new node_1.Node(new_poc);
-            console.log("after", current);
+            // console.log("after",current)
         }
         return this;
     };
@@ -703,7 +703,7 @@ var SLL = /** @class */ (function () {
         }
     };
     SLL.prototype.delete_node = function (poc) {
-        console.log("dleteing");
+        console.log("deleteing");
         var temp;
         if (poc.order) {
             if (!this.head) {
@@ -733,6 +733,125 @@ var SLL = /** @class */ (function () {
             console.log("please provide a node to remove");
             return false;
         }
+    };
+    // find takes a poc and returns pointers to current and previous nodes
+    SLL.prototype.find = function (poc) {
+        if (poc.order) {
+            if (!this.head) {
+                console.log("empty list");
+                return { "previous": null, "current": null };
+            }
+            else if (this.head.poc.order === poc.order) {
+                return { "previous": null, "current": this.head };
+            }
+            else {
+                var current = this.head, previous = this.head;
+                while (current) {
+                    if (current.poc.order === poc.order) {
+                        return { "previous": previous, "current": current };
+                    }
+                    previous = current, current = current.next;
+                }
+                console.log("value doesn't exit went through the list");
+                return { "previous": null, "current": null };
+            }
+        }
+        else {
+            console.log("please provide a node to remove");
+            return { "previous": null, "current": null };
+        }
+    };
+    SLL.prototype.exchange_orders = function (poc1, poc2) {
+        console.log(poc1.order);
+        console.log(poc2.order);
+        var search_poc_1 = this.find(poc1), search_poc_2 = this.find(poc2), temp;
+        if (poc1.order != this.head.poc)
+            if (!this.head) {
+                console.log("empty sll");
+                return false;
+            }
+            else if (!(search_poc_1.current && search_poc_2.current)) {
+                console.log("the POCs don't exist");
+                return false;
+            }
+            else if (poc1.order === this.head.poc.order) {
+                temp = poc1.order;
+                search_poc_1.current.poc.order = poc2.order;
+                search_poc_2.current.poc.order = temp;
+                temp = search_poc_2.current.next;
+                search_poc_2.current.next = search_poc_1.current.next;
+                this.head = search_poc_2.current;
+                search_poc_1.current.next = temp;
+                search_poc_2.previous.next = search_poc_1.current;
+                console.log(search_poc_1.current);
+                console.log(this.head);
+            }
+            else if (poc2.order === this.head.poc.order) {
+                temp = poc1.order;
+                search_poc_1.current.poc.order = poc2.order;
+                search_poc_2.current.poc.order = temp;
+                temp = search_poc_1.current.next;
+                search_poc_1.current.next = search_poc_2.current.next;
+                this.head = search_poc_1.current;
+                search_poc_2.current.next = temp;
+                search_poc_1.previous.next = search_poc_2.current;
+                console.log(search_poc_1.current);
+                console.log(this.head);
+            }
+            else if (search_poc_1.previous && search_poc_1.current && search_poc_2.previous && search_poc_2.current) {
+                if (poc1.order < poc2.order) {
+                    temp = search_poc_1.current;
+                    search_poc_1.previous.next = search_poc_2.current;
+                    if (search_poc_2.previous.poc.order === poc1.order) {
+                        temp = search_poc_2.current.next;
+                        search_poc_2.current.next = search_poc_1.current;
+                        search_poc_1.current.next = temp;
+                        temp = poc1.order;
+                        search_poc_1.current.poc.order = poc2.order;
+                        search_poc_2.current.poc.order = temp;
+                        console.log(search_poc_1.current);
+                        console.log(this.head);
+                    }
+                    else {
+                        temp = poc1.order;
+                        search_poc_1.current.poc.order = poc2.order;
+                        search_poc_2.current.poc.order = temp;
+                        temp = search_poc_1.current.next;
+                        search_poc_1.current.next = search_poc_2.current.next;
+                        search_poc_2.current.next = temp;
+                        search_poc_1.previous.next = search_poc_2.current;
+                        search_poc_2.previous.next = search_poc_1.current;
+                        console.log(search_poc_1.current);
+                        console.log(this.head);
+                    }
+                }
+                else {
+                    temp = search_poc_2.current;
+                    search_poc_2.previous.next = search_poc_1.current;
+                    if (search_poc_1.previous.poc.order === poc2.order) {
+                        temp = search_poc_1.current.next;
+                        search_poc_1.current.next = search_poc_2.current;
+                        search_poc_2.current.next = temp;
+                        temp = poc2.order;
+                        search_poc_2.current.poc.order = poc1.order;
+                        search_poc_1.current.poc.order = temp;
+                        console.log(search_poc_2.current);
+                        console.log(this.head);
+                    }
+                    else {
+                        temp = poc1.order;
+                        search_poc_1.current.poc.order = poc2.order;
+                        search_poc_2.current.poc.order = temp;
+                        temp = search_poc_1.current.next;
+                        search_poc_1.current.next = search_poc_2.current.next;
+                        search_poc_2.current.next = temp;
+                        search_poc_1.previous.next = search_poc_2.current;
+                        search_poc_2.previous.next = search_poc_1.current;
+                        console.log(search_poc_1.current);
+                        console.log(this.head);
+                    }
+                }
+            }
     };
     return SLL;
 }());
@@ -943,10 +1062,6 @@ var SitesNewComponent = /** @class */ (function () {
         this.GAR = new poc_1.POC;
         this.GAR.poc_name = "GAR";
         this.initial_order = 0;
-        console.dir(this.pocs);
-        // this.pocs.insert(this.GAR);
-        // this.pocs.insert(GAR2)
-        // this.pocs.traverse()
     };
     SitesNewComponent.prototype.addSite = function () {
         console.dir(this.address);
@@ -991,9 +1106,14 @@ var SitesNewComponent = /** @class */ (function () {
         var GAR2 = new poc_1.POC;
         GAR2.poc_name = "Test";
         GAR2.order = 2;
+        var GAR3 = new poc_1.POC;
+        GAR3.poc_name = "Switch";
+        GAR3.order = 3;
         this.pocs.insert(this.GAR);
         this.pocs.insert(GAR2);
-        this.pocs.delete_node(GAR2);
+        this.pocs.insert(GAR3);
+        this.pocs.exchange_orders(GAR3, GAR2);
+        //this.pocs.delete_node(GAR2)
         this.pocs.last_changed = Date.now();
         this._sitesService.updateNewSitePOCS(this.pocs);
         this.GAR = new poc_1.POC;
