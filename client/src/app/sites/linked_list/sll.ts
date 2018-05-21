@@ -54,7 +54,7 @@ export class SLL{
 
     
     delete_node(poc:POC){
-         console.log("deleteing")
+        console.log("deleteing")
         let temp;
         if(poc.order){
             if(!this.head){

@@ -325,11 +325,14 @@
         <th>Order of contact</th>
         <th>Method of contact</th>
         <th>Number/Email</th>
+        <th></th>
     </tr>
     <tr *appWhile="pocs,let contact">
         <td>{{contact.order}}</td>
         <td>{{contact.poc_type}}</td>
         <td>{{contact.poc_value}}</td>
+        <i class="fa fa-window-close" aria-hidden="true" (click)="removePOC(contact)"></i>
+
     </tr>
 </table>
     

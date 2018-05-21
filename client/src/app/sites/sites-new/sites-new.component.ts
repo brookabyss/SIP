@@ -120,12 +120,18 @@ export class SitesNewComponent implements OnInit, OnDestroy {
     this.pocs.insert(this.GAR)
     this.pocs.insert(GAR2)
     this.pocs.insert(GAR3)
-    this.pocs.exchange_orders(GAR3,GAR2)
-    //this.pocs.delete_node(GAR2)
+    this.pocs.exchange_orders(this.GAR,GAR3)
     this.pocs.last_changed= Date.now()
     this._sitesService.updateNewSitePOCS(this.pocs);
     this.GAR = new POC;
     this.GAR.poc_name= "GAR"
+  }
+  
+  removePOC(contact){
+    console.log("remove",contact)
+    this.pocs.delete_node(contact);
+    this.pocs.last_changed= Date.now()
+    this._sitesService.updateNewSitePOCS(this.pocs);
   }
   
    ngOnDestroy(){
