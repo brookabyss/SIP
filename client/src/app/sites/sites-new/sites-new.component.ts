@@ -19,10 +19,10 @@ import { AmazingTimePickerService } from 'amazing-time-picker';
 })
 export class SitesNewComponent implements OnInit, OnDestroy {
   
+  site_creation_status: any;
   site: Site;
   address: Address;
   pages: any;
-  
   // Area Secruity Manager (ASM)
   ASM: POC;
   //Regional Security Manager(RSM)
@@ -55,6 +55,14 @@ export class SitesNewComponent implements OnInit, OnDestroy {
     this.GAR = new POC;
     this.GAR.poc_name="GAR";
     this.initial_order=0;
+    
+    // Site creation check for each section 
+    
+    this. site_creation_status={
+      "general":false,
+      "address": false,
+      "poc":false,
+    }
 
     
    

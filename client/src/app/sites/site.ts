@@ -2,8 +2,8 @@ import { POC } from './poc'
 
 export class Site{
     _id: string;
-    site_name: String;
-    site_code: String;
+    site_name: string;
+    site_code: string;
     monitored_zone: Boolean;
     address_id: Number;
     created_at: Date;

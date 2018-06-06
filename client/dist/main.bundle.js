@@ -937,10 +937,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var site_1 = __webpack_require__("./src/app/sites/site.ts");
+// import { BST } from "../avl_bst/bst"
+var avl_1 = __webpack_require__("./node_modules/avl/src/index.js");
 var SitesAllComponent = /** @class */ (function () {
     function SitesAllComponent() {
     }
     SitesAllComponent.prototype.ngOnInit = function () {
+        this.tree = new avl_1.default(null, true);
+        this.site1 = new site_1.Site;
+        this.site1.site_code = "SEA1";
+        this.site1.site_name = "Septo";
+        this.site2 = new site_1.Site;
+        this.site2.site_code = "DEP2";
+        this.site2.site_name = "Depto";
+        this.site3 = new site_1.Site;
+        this.site3.site_code = "SEA28";
+        this.site3.site_name = "Kepto";
+        this.site4 = new site_1.Site;
+        this.site4.site_code = "ZZZ24";
+        this.site4.site_name = "Zepto";
+        this.site5 = new site_1.Site;
+        this.site5.site_code = "ZZZ25";
+        this.site5.site_name = "Zepto2";
+        this.tree.insert(this.site1.site_code, this.site1);
+        this.tree.insert(this.site1.site_code, this.site1);
+        console.dir(this.tree);
     };
     SitesAllComponent = __decorate([
         core_1.Component({
@@ -1062,6 +1084,12 @@ var SitesNewComponent = /** @class */ (function () {
         this.GAR = new poc_1.POC;
         this.GAR.poc_name = "GAR";
         this.initial_order = 0;
+        // Site creation check for each section 
+        this.site_creation_status = {
+            "general": false,
+            "address": false,
+            "poc": false,
+        };
     };
     SitesNewComponent.prototype.addSite = function () {
         console.dir(this.address);
