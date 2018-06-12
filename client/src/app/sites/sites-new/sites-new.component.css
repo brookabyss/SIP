@@ -7,6 +7,13 @@ form,.form-title{
     padding: 2%;
 }
 
+#inlineCheckbox1,#inlineCheckbox2,#inlineCheckbox3{
+    width: 30px;
+}
+
+.site-form-content{
+    margin-left: 10%;
+}
 .site-form-container{
     border: orange 1px solid;
      margin-left: 20%;
@@ -31,6 +38,9 @@ form,.form-title{
 
 .weekDays-selector input {
   display: none!important;
+}
+.weekDays-selector{
+    margin-top: 4%;
 }
 
 .weekDays-selector input[type=checkbox] + label {
@@ -71,3 +81,17 @@ i{
 .fa-plus{
     display: inline;
 }
+.nextPage{
+    position: relative;
+    left: 80%;
+}
+
+.all_days_selected{
+    background: #2AD705;
+    color: #ffffff;
+}
+
+/*.form-group, h6,h1{*/
+/*    margin-left: 5%;*/
+/*}*/
+

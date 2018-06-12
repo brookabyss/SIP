@@ -1,0 +1,198 @@
+
+<div>
+<!-- Button trigger modal -->
+<button type="button" class="btn light-blue" data-toggle="modal" data-target="#exampleModalCenter">
+  Search Address
+</button>
+
+<form #addressForm="ngForm" class="address-form"novalidate >
+   
+<div class="form-group">
+   <label for="line_1">Line 1</label>
+   <input
+     type="text"
+     required
+     class="in-marg form-control col-8"
+     id="line_1"
+     name="line_1"
+     [(ngModel)]="address.line_1"
+     #line_1="ngModel"
+     placeholder="Enter Address">
+ </div>
+ <div class="form-group">
+   <label for="line_2">Line 2</label>
+   <input
+     type="text"
+     class="in-marg form-control col-8"
+     id="line_2"
+     name="line_2"
+     [(ngModel)]="address.line_2"
+     #line_2="ngModel"
+     placeholder="Address">
+ </div>
+
+<div class="form-group">
+   <label for="line_3">Line 3</label>
+   <input
+     type="text"
+     class="in-marg form-control col-8"
+     id="line_3"
+     name="line_3"
+     [(ngModel)]="address.line_3"
+     #line_3="ngModel"
+     placeholder="Address">
+ </div>
+
+ <div class="form-group">
+   <label for="city">City</label>
+   <input
+     type="text"
+     required
+     class="in-marg form-control col-8"
+     id="city"
+     name="city"
+     [(ngModel)]="address.city"
+     #city="ngModel"
+     placeholder="City">
+ </div>
+
+ <div class="form-group">
+   <label for="region">Region/State</label>
+   <input
+     type="text"
+     required
+     class="in-marg form-control col-8"
+     id="region_state"
+     name="region_state"
+     [(ngModel)]="address.region_state"
+     #region_state="ngModel"
+     placeholder="Enter Region/State">
+ </div>
+
+ <div class="form-group">
+   <label for="country">Country</label>
+   <input
+     type="text"
+     required
+     class="in-marg form-control col-8"
+     id="country"
+     name="country"
+     [(ngModel)]="address.country"
+     #country="ngModel"
+     placeholder="Country">
+ </div>
+
+ <div class="form-group">
+   <label for="zipcode">Zip Code</label>
+   <input
+     type="text"
+     required
+     class="in-marg form-control col-8"
+     id="zipcode"
+     name="zipcode"
+     [(ngModel)]="address.zipcode"
+     #zipcode="ngModel"
+     placeholder="Enter Zip Code">
+ </div>
+
+ <div class="form-group">
+   <label for="latitude">Latitude</label>
+   <input
+     type="text"
+     required
+     class="in-marg form-control col-8"
+     id="latitude"
+     name="latitude"
+     [(ngModel)]="address.latitude"
+     #latitude="ngModel"
+     placeholder="Enter Latitude">
+ </div>
+
+ <div class="form-group">
+   <label for="longitude">Longitude</label>
+   <input
+     type="text"
+     required
+     class="in-marg form-control col-8"
+     id="longitude"
+     name="longitude"
+     [(ngModel)]="address.longitude"
+     #longitude="ngModel"
+     placeholder="Enter Longitude">
+ </div>
+
+<div class="form-group">
+   <label for="other_details">Other Details</label>
+   <input
+     type="text"
+     class="in-marg form-control col-8"
+     id="other_details"
+     name="other_details"
+     [(ngModel)]="address.other_details"
+     #other_details="ngModel"
+     placeholder="Enter Other Details">
+ </div>
+ 
+ <button [disabled]="!addressForm.form.valid" class="nextPage btn btn-primary">Continue</button>
+
+</form>
+
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Search Address</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+        <input id="search_address" name="search_address"  placeholder="search for location"  type="text" autocorrect="off" autocapitalize="off" spellcheck="off" class="form-control" [(ngModel)]="searchControl" #search_address="ngModel">
+</div>
+
+ <agm-map 
+  [latitude]="lat"
+  [longitude]="lng"
+  [zoom]="zoom"
+  [disableDefaultUI]="false"
+  [zoomControl]="false"
+  (mapClick)="mapClicked($event)">
+
+  <agm-marker class="agm"
+      *ngFor="let m of markers; let i = index"
+      (markerClick)="clickedMarker(m.label, i)"
+      [latitude]="m.lat"
+      [longitude]="m.lng"
+      [label]="m.label"
+      [markerDraggable]="m.draggable"
+      (dragEnd)="markerDragEnd(m, $event)">
+      
+    <agm-info-window>
+      <strong>InfoWindow content</strong>
+    </agm-info-window>
+    
+  </agm-marker>
+  
+  <agm-circle [latitude]="lat + 0.3" [longitude]="lng" 
+      [radius]="5000"
+      [fillColor]="'red'"
+      [circleDraggable]="true"
+      [editable]="true">
+  </agm-circle>
+
+</agm-map>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Set Address</button>
+      </div>
+    </div>
+  </div>
+</div>
+

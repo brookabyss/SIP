@@ -31,12 +31,19 @@ export class SitesNewComponent implements OnInit, OnDestroy {
   GAR: POC;
   pocs: SLL;
   initial_order: number;
-  pocs_subscription: Subscription
-  
+  pocs_subscription: Subscription;
+  // Time picker set for setting all business days
+  all_business: boolean;
+  all_days_selected: boolean;
+  site_subscription: Subscription;
   constructor(private _sitesService: SitesService, private atp: AmazingTimePickerService) { }
 
   ngOnInit() {
-    this.site= new Site;
+    this.site_subscription= this._sitesService.observedSite.subscribe(
+      site => this.site = site,
+      err => console.log(err),
+      ()=>{}
+    );
     this.address= new Address;
     this.pages={
       general_info: true,
@@ -44,6 +51,9 @@ export class SitesNewComponent implements OnInit, OnDestroy {
       poc:null,
       confirm:null
     }
+    this.all_business=false;
+    //for styling
+    this.all_days_selected= false;
     
     
     /// POC linked list 
@@ -97,7 +107,19 @@ export class SitesNewComponent implements OnInit, OnDestroy {
   }
   
   dayClicked(day){
-    this.site.business_days[day].active= !this.site.business_days[day].active
+    console.log(day)
+    if(day==="all"){
+      console.log(day)
+      for(let key in this.site.business_days){
+          console.log(this.site.business_days[key])
+          this.site.business_days[key].active= !this.site.business_days[key].active
+      }
+    }
+    else{
+      this.site.business_days[day].active= !this.site.business_days[day].active
+
+    }
+    
     
   }
   
@@ -105,13 +127,54 @@ export class SitesNewComponent implements OnInit, OnDestroy {
     const amazingTimePicker = this.atp.open();
     amazingTimePicker.afterClose().subscribe(time => {
       console.log(time);
-      this.site.business_days[day][period]=time;
-      console.dir(this.site.business_days)
+      if(day==="all"){
+        for(let key in this.site.business_days){
+          console.log(this.site.business_days[key])
+          this.site.business_days[key][period]=time;
+        }
+      }
+      else{
+        this.site.business_days[day][period]=time;
+        console.dir(this.site.business_days)
+      }
+      
     });
   }
   
   checkBusinessHours(){
+    let mon, tue, wed, thur, fri, sat, sun;
     console.log("Business hours checked")
+    this.all_business=! this.all_business
+    this.all_days_selected = !this.all_days_selected
+    console.log(this.all_business)
+    console.log(document);
+    
+    mon= (<HTMLInputElement>document.getElementById("weekday-mon"));
+    mon.checked= !mon.checked
+    
+    tue= (<HTMLInputElement>document.getElementById("weekday-tue"));
+    tue.checked= !tue.checked
+    
+    wed= (<HTMLInputElement>document.getElementById("weekday-wed"));
+    wed.checked= !wed.checked;
+    
+    thur= (<HTMLInputElement>document.getElementById("weekday-thu"));
+    thur.checked = !thur.checked;
+    
+    fri=(<HTMLInputElement>document.getElementById("weekday-fri"));
+    fri.checked = !fri.checked;
+    
+    sat=(<HTMLInputElement>document.getElementById("weekday-sat"));
+    sat.checked = !sat.checked;
+    
+    sun=(<HTMLInputElement>document.getElementById("weekday-sun"));
+    sun.checked = !sun.checked;
+    for(let key in this.site.business_days){
+          console.log(this.site.business_days[key])
+          this.site.business_days[key].active= !this.site.business_days[key].active
+      }
+    console.log(this.all_days_selected);
+
   }
   
   

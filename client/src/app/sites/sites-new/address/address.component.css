@@ -1,0 +1,22 @@
+/*.form-group, h6{*/
+/*    margin-left: 5%;*/
+/*}*/
+
+.nextPage{
+    position: relative;
+    left: 80%;
+    margin-bottom: 5%;
+}
+
+agm-map {
+  height: 400px;
+}
+
+.ui-front {
+    z-index: 9999;
+}
+
+.light-blue{
+    background: #03a9f4;
+    color: white;
+}

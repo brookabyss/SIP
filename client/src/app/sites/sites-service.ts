@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/toPromise'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-
+import { Site } from './site'
 import { SLL } from './linked_list/sll'
 
 
@@ -13,10 +13,14 @@ import { SLL } from './linked_list/sll'
 export class SitesService {
   
   observedSites = new BehaviorSubject([]);
+  observedSite = new BehaviorSubject(new Site);
   observed_new_site_pocs = new BehaviorSubject(new SLL);
   
   constructor(private _http: Http) { }
   
+  updateSite(site){
+      this.observedSite.next(site);
+  }
   
   updateSites(sites){
       this.observedSites.next(sites);

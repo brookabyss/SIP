@@ -7,8 +7,10 @@
   <div class="border col-sm-3" [ngClass]="{orange:pages['confirm'], 'tabs':true}" (click)="swicthPages('confirm')">Confirm</div>
 </nav>
 
-
+<div class="site-form-content">
  <h1 class="form-title">New Site</h1>
+
+<!--General Site info-->
 
 <form #siteForm="ngForm" novalidate *ngIf="pages.general_info">
  <div class="form-group form-group-sm">
@@ -41,7 +43,7 @@
   <input
   class="form-check-input radio"
   type="radio"
-  id="inlineCheckbox"
+  id="inlineCheckbox1"
   name="monitored_zone"
   required
   [(ngModel)]="site.monitored_zone"
@@ -54,7 +56,7 @@
   <input
   class="form-check-input radio"
   type="radio"
-  id="inlineCheckbox"
+  id="inlineCheckbox2"
   name="monitored_zone"
   required
   [(ngModel)]="site.monitored_zone"
@@ -120,231 +122,37 @@
   
  
 </div>
-<input id="check_business_hours" type="checkbox" (change)="checkBusinessHours()"><label for="">Quick set business hours</label><br>
+<ul>
+    <li *ngIf="site.business_days[1].active">Mon ~ <strong>Start: {{site.business_days[1].start || 'N/A'}} - End:  {{site.business_days[1].end || 'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[2].active">Tue ~ <strong>Start: {{site.business_days[2].start || 'N/A'}} - End: {{site.business_days[2].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[3].active">Wed ~ <strong>Start: {{site.business_days[3].start || 'N/A'}} - End: {{site.business_days[3].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[4].active">Thu ~ <strong>Start: {{site.business_days[4].start || 'N/A'}} - End: {{site.business_days[4].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[5].active">Fri ~ <strong>Start: {{site.business_days[5].start || 'N/A'}} - End: {{site.business_days[5].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[6].active">Sat ~ <strong>Start: {{site.business_days[6].start ||'N/A'}} - End: {{site.business_days[6].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[0].active">Sun ~ <strong>Start: {{site.business_days[0].start ||'N/A'}} - End: {{site.business_days[0].end ||'N/A'}}</strong></li>
+</ul>
 
 
- <button [disabled]="!siteForm.form.valid" (click)="addSite()" class="btn btn-primary">Submit</button>
+<!--Quick set time for all business hours-->
+
+<input id="check_business_hours" id="inlineCheckbox3" type="checkbox" (change)="checkBusinessHours()"><label for="">Quick set</label>
+ <div class="day-time weekDays-selector" *ngIf="all_business">
+      <i class="fa fa-sun-o col col-3" aria-hidden="true" *ngIf="site.business_days[5].active" (click)="open('all','start')"></i>
+      <i class="fa fa-moon-o col col-3" aria-hidden="true" *ngIf="site.business_days[5].active" (click)="open('all','end')"></i>
+  </div><br>
+
+
+ <button [disabled]="!siteForm.form.valid" (click)="addSite()" class="btn btn-primary nextPage">Continue</button>
 </form>
 
+<app-address *ngIf="this.pages['address']"></app-address>
 
-
-<div *ngIf="this.pages['address']">
-<h6>Address Section:</h6>
-<h6>Address:</h6>
-
-<form #addressForm="ngForm" novalidate >
-   
-<div class="form-group">
-   <label for="line_1">Line 1</label>
-   <input
-     type="text"
-     required
-     class="form-control"
-     id="line_1"
-     name="line_1"
-     [(ngModel)]="address.line_1"
-     #line_1="ngModel"
-     placeholder="Enter Address">
- </div>
- <div class="form-group">
-   <label for="line_2">Line 2</label>
-   <input
-     type="text"
-     class="form-control"
-     id="line_2"
-     name="line_2"
-     [(ngModel)]="address.line_2"
-     #line_2="ngModel"
-     placeholder="Address">
- </div>
-
-<div class="form-group">
-   <label for="line_3">Line 3</label>
-   <input
-     type="text"
-     class="form-control"
-     id="line_3"
-     name="line_3"
-     [(ngModel)]="address.line_3"
-     #line_3="ngModel"
-     placeholder="Address">
- </div>
-
- <div class="form-group">
-   <label for="city">City</label>
-   <input
-     type="text"
-     required
-     class="form-control"
-     id="city"
-     name="city"
-     [(ngModel)]="address.city"
-     #city="ngModel"
-     placeholder="City">
- </div>
-
- <div class="form-group">
-   <label for="region">Region/State</label>
-   <input
-     type="text"
-     required
-     class="form-control"
-     id="region_state"
-     name="region_state"
-     [(ngModel)]="address.region_state"
-     #region_state="ngModel"
-     placeholder="Enter Region/State">
- </div>
-
- <div class="form-group">
-   <label for="country">Country</label>
-   <input
-     type="text"
-     required
-     class="form-control"
-     id="country"
-     name="country"
-     [(ngModel)]="address.country"
-     #country="ngModel"
-     placeholder="Country">
- </div>
-
- <div class="form-group">
-   <label for="zipcode">Zip Code</label>
-   <input
-     type="text"
-     required
-     class="form-control"
-     id="zipcode"
-     name="zipcode"
-     [(ngModel)]="address.zipcode"
-     #zipcode="ngModel"
-     placeholder="Enter Zip Code">
- </div>
-
- <div class="form-group">
-   <label for="latitude">Latitude</label>
-   <input
-     type="text"
-     required
-     class="form-control"
-     id="latitude"
-     name="latitude"
-     [(ngModel)]="address.latitude"
-     #latitude="ngModel"
-     placeholder="Enter Latitude">
- </div>
-
- <div class="form-group">
-   <label for="longitude">Longitude</label>
-   <input
-     type="text"
-     required
-     class="form-control"
-     id="longitude"
-     name="longitude"
-     [(ngModel)]="address.longitude"
-     #longitude="ngModel"
-     placeholder="Enter Longitude">
- </div>
-
-<div class="form-group">
-   <label for="other_details">Other Details</label>
-   <input
-     type="text"
-     class="form-control"
-     id="other_details"
-     name="other_details"
-     [(ngModel)]="address.other_details"
-     #other_details="ngModel"
-     placeholder="Enter Other Details">
- </div>
- 
- <button >Add Address</button>
-
-</form>
+<app-poc *ngIf="this.pages['poc']"></app-poc>
 
 </div>
 
-<form #pocForm="ngForm" novalidate *ngIf="this.pages['poc']">
-    <label for="asm_email">ASM</label>
-    <input 
-        type="email"
-        required
-        name="asm_email"
-        [(ngModel)]="this.site.ASM"
-        #asm_email="ngModel"
-    >
-    <label for="rsm_email">RSM</label>
-    <input 
-        type="email"
-        required
-        name="rsm_email"
-        [(ngModel)]="this.site.RSM"
-        #rsm_email="ngModel"
-    >
-    <label for="">General Alarm Responder</label>
-        <select name="gar" id=""[(ngModel)]="this.GAR.poc_type" #gar="ngModel" class="form-control form-control-sm">
-         <option value="null">Choose POC Method</option>
-         <option value="email">Email</option>
-         <option value="cell">Cell Number</option>
-         <option value="office">Office Number</option>
-        </select>
-    <label for="poc_value">POC Value</label><input class="form-control" type="text" required name="poc_value" [(ngModel)]="this.GAR.poc_value" #poc_value="ngModel"><br>
-
-
-
-<div class="form-check form-check-inline">
-  <input
-  class="form-check-input radio"
-  type="radio"
-  id="bh_check"
-  name="bh_check"
-  required
-  [(ngModel)]="this.GAR.available.bh"
-  #bh_check="ngModel"
-  [value]="true">
-  <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">Available Business Hours</label>
 </div>
 
-<div class="form-check form-check-inline">
-  <input
-  class="form-check-input radio"
-  type="radio"
-  id="ah_check"
-  name="ah_check"
-  required
-  [(ngModel)]="this.GAR.available.ah"
-  #ah_check="ngModel"
-  [value]="false">
-  <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">Available After Hours</label>
-</div>
-<i class="fa fa-plus" aria-hidden="true" (click)="addGAR()"></i>
-<table class="table table-sm">
-    <tr>
-        <th>Order of contact</th>
-        <th>Method of contact</th>
-        <th>Number/Email</th>
-        <th></th>
-    </tr>
-    <tr *appWhile="pocs,let contact">
-        <td>{{contact.order}}</td>
-        <td>{{contact.poc_type}}</td>
-        <td>{{contact.poc_value}}</td>
-        <i class="fa fa-window-close" aria-hidden="true" (click)="removePOC(contact)"></i>
-
-    </tr>
-</table>
-    
-    <button [disabled]="!pocForm.form.valid" >Next Page</button>
-</form>
-
-
-
-
-
-
-</div>
 
 
 

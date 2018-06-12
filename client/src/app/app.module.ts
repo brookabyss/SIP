@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AmazingTimePickerModule } from 'amazing-time-picker'; // this line you need
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { WhileDirective } from './linkedlist-directive'
+import { AgmCoreModule } from '@agm/core';
+
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -22,6 +24,8 @@ import { AlarmsDispatchComponent } from './alarms/alarms-dispatch/alarms-dispatc
 import {LoginService } from './login/login-service';
 import {SitesService } from './sites/sites-service';
 import {AlarmsService } from './alarms/alarms-service';
+import { AddressComponent } from './sites/sites-new/address/address.component';
+import { PocComponent } from './sites/sites-new/poc/poc.component';
 
 
 
@@ -46,7 +50,9 @@ export function cookieStrategy() {
     AlarmsComponent,
     AlarmsPendingComponent,
     AlarmsDispatchComponent,
-    WhileDirective
+    WhileDirective,
+    AddressComponent,
+    PocComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +60,11 @@ export function cookieStrategy() {
     HttpModule,
     AppRoutingModule,
     AmazingTimePickerModule,
-    AngularFontAwesomeModule
+    AngularFontAwesomeModule,
+    AgmCoreModule.forRoot({
+      apiKey:"AIzaSyC8mUARmEjgn9lDp199rjvV8QpRr5o_W6s",
+      libraries: ["places"]
+    })
     
    
   ],

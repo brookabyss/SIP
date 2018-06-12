@@ -1,0 +1,72 @@
+<form #pocForm="ngForm"  novalidate>
+    <label for="asm_email">ASM</label>
+    <input 
+        type="email"
+        required
+        name="asm_email"
+        [(ngModel)]="this.site.ASM"
+        #asm_email="ngModel"
+    ><br>
+    <label for="rsm_email">RSM</label>
+    <input 
+        type="email"
+        required
+        name="rsm_email"
+        [(ngModel)]="this.site.RSM"
+        #rsm_email="ngModel"
+    ><br>
+    <label for="">General Alarm Responder</label>
+        <select name="gar" id=""[(ngModel)]="this.GAR.poc_type" #gar="ngModel" class="form-control form-control-sm">
+         <option value="null">Choose POC Method</option>
+         <option value="email">Email</option>
+         <option value="cell">Cell Number</option>
+         <option value="office">Office Number</option>
+        </select>
+    <label for="poc_value">POC Value</label><input class="form-control" type="text" required name="poc_value" [(ngModel)]="this.GAR.poc_value" #poc_value="ngModel"><br>
+
+
+
+<div class="form-check form-check-inline">
+  <input
+  class="form-check-input radio"
+  type="radio"
+  id="bh_check"
+  name="bh_check"
+  required
+  [(ngModel)]="this.GAR.available.bh"
+  #bh_check="ngModel"
+  [value]="true">
+  <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">Available Business Hours</label>
+</div>
+
+<div class="form-check form-check-inline">
+  <input
+  class="form-check-input radio"
+  type="radio"
+  id="ah_check"
+  name="ah_check"
+  required
+  [(ngModel)]="this.GAR.available.ah"
+  #ah_check="ngModel"
+  [value]="false">
+  <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">Available After Hours</label>
+</div>
+<i class="fa fa-plus" aria-hidden="true" (click)="addGAR()"></i>
+<table class="table table-sm">
+    <tr>
+        <th>Order of contact</th>
+        <th>Method of contact</th>
+        <th>Number/Email</th>
+        <th></th>
+    </tr>
+    <tr *appWhile="pocs,let contact">
+        <td>{{contact.order}}</td>
+        <td>{{contact.poc_type}}</td>
+        <td>{{contact.poc_value}}</td>
+        <i class="fa fa-window-close" aria-hidden="true" (click)="removePOC(contact)"></i>
+
+    </tr>
+</table>
+    
+    <button [disabled]="!pocForm.form.valid" class="nextPage btn btn-primary">Continue</button>
+</form>
