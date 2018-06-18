@@ -14,8 +14,8 @@ export class WhileDirective implements  DoCheck, OnDestroy, OnInit {
     subscription: Subscription
     constructor(private templateRef: TemplateRef<any>,private viewContainer: ViewContainerRef, private _sitesService: SitesService, private differs: KeyValueDiffers) { 
         // console.log("directive initialized")
-        this.subscription= this._sitesService.observed_new_site_pocs.subscribe(
-            pocs=>this._observedpocs=pocs,
+        this.subscription= this._sitesService.observedSite.subscribe(
+            site=>this._observedpocs=site.pocs,
             err=>console.log(err),
             ()=>{}
             )
@@ -31,7 +31,15 @@ export class WhileDirective implements  DoCheck, OnDestroy, OnInit {
     @Input() set appWhile(sll: SLL) {
         // this.differ= this.differs.find(sll).create()
         console.log(sll)
-        this.last_changed= sll.last_changed
+        
+        // when it first POC comes in the last changed is the same , so it neglects showing the first POC, by offsetting the time we can see the poc now
+        if(sll.size===1){
+            this.last_changed= sll.last_changed + 1
+        }
+        else{
+            this.last_changed= sll.last_changed
+        }
+        
         
     }
     

@@ -384,6 +384,7 @@ var sites_service_1 = __webpack_require__("./src/app/sites/sites-service.ts");
 var alarms_service_1 = __webpack_require__("./src/app/alarms/alarms-service.ts");
 var address_component_1 = __webpack_require__("./src/app/sites/sites-new/address/address.component.ts");
 var poc_component_1 = __webpack_require__("./src/app/sites/sites-new/poc/poc.component.ts");
+var confirm_component_1 = __webpack_require__("./src/app/sites/sites-new/confirm/confirm.component.ts");
 function cookieStrategy() {
     console.log("******************************************************");
     var c = new http_1.CookieXSRFStrategy('csrftoken', 'X-CSRFToken');
@@ -409,19 +410,20 @@ var AppModule = /** @class */ (function () {
                 alarms_dispatch_component_1.AlarmsDispatchComponent,
                 linkedlist_directive_1.WhileDirective,
                 address_component_1.AddressComponent,
-                poc_component_1.PocComponent
+                poc_component_1.PocComponent,
+                confirm_component_1.ConfirmComponent,
             ],
             imports: [
-                platform_browser_1.BrowserModule,
-                forms_1.FormsModule,
-                http_1.HttpModule,
                 app_routing_module_1.AppRoutingModule,
                 amazing_time_picker_1.AmazingTimePickerModule,
                 angular_font_awesome_1.AngularFontAwesomeModule,
                 core_2.AgmCoreModule.forRoot({
                     apiKey: "AIzaSyC8mUARmEjgn9lDp199rjvV8QpRr5o_W6s",
                     libraries: ["places"]
-                })
+                }),
+                platform_browser_1.BrowserModule,
+                forms_1.FormsModule,
+                http_1.HttpModule,
             ],
             providers: [alarms_service_1.AlarmsService, login_service_1.LoginService, sites_service_1.SitesService, {
                     provide: http_1.XSRFStrategy,
@@ -463,7 +465,7 @@ var WhileDirective = /** @class */ (function () {
         this._sitesService = _sitesService;
         this.differs = differs;
         // console.log("directive initialized")
-        this.subscription = this._sitesService.observed_new_site_pocs.subscribe(function (pocs) { return _this._observedpocs = pocs; }, function (err) { return console.log(err); }, function () { });
+        this.subscription = this._sitesService.observedSite.subscribe(function (site) { return _this._observedpocs = site.pocs; }, function (err) { return console.log(err); }, function () { });
     }
     WhileDirective.prototype.ngOnInit = function () {
     };
@@ -471,7 +473,13 @@ var WhileDirective = /** @class */ (function () {
         set: function (sll) {
             // this.differ= this.differs.find(sll).create()
             console.log(sll);
-            this.last_changed = sll.last_changed;
+            // when it first POC comes in the last changed is the same , so it neglects showing the first POC, by offsetting the time we can see the poc now
+            if (sll.size === 1) {
+                this.last_changed = sll.last_changed + 1;
+            }
+            else {
+                this.last_changed = sll.last_changed;
+            }
         },
         enumerable: true,
         configurable: true
@@ -676,17 +684,21 @@ var SLL = /** @class */ (function () {
         if (new_poc === void 0) { new_poc = null; }
         if (new_poc) {
             this.head = new node_1.Node(new_poc);
+            this.size = 1;
         }
         this.last_changed = Date.now();
+        this.size = 0;
     }
     SLL.prototype.insert = function (new_poc) {
         if (!this.head) {
             this.head = new node_1.Node(new_poc);
+            this.size++;
         }
         else if (this.head.poc.order > new_poc.order) {
             var temp = this.head;
             this.head = new node_1.Node(new_poc);
             this.head.next = temp;
+            this.size++;
         }
         else {
             var current = this.head;
@@ -695,6 +707,7 @@ var SLL = /** @class */ (function () {
                 current = current.next;
             }
             current.next = new node_1.Node(new_poc);
+            this.size++;
             // console.log("after",current)
         }
         return this;
@@ -723,6 +736,7 @@ var SLL = /** @class */ (function () {
                 temp = this.head;
                 this.head = this.head.next;
                 console.log("temp", temp);
+                this.size--;
                 return temp;
             }
             else {
@@ -896,6 +910,8 @@ exports.POC = POC;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var address_1 = __webpack_require__("./src/app/sites/address.ts");
+var sll_1 = __webpack_require__("./src/app/sites/linked_list/sll.ts");
 var Site = /** @class */ (function () {
     function Site() {
         this.business_days = [
@@ -907,7 +923,9 @@ var Site = /** @class */ (function () {
             { active: false, start: null, end: null },
             { active: false, start: null, end: null },
         ];
-        this.pocs = [];
+        this.pocs = new sll_1.SLL;
+        this.address = new address_1.Address;
+        this.form_status = false;
     }
     return Site;
 }());
@@ -1048,7 +1066,7 @@ module.exports = "/*.form-group, h6{*/\n/*    margin-left: 5%;*/\n/*}*/\n.nextPa
 /***/ "./src/app/sites/sites-new/address/address.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<div>\n<!-- Button trigger modal -->\n<button type=\"button\" class=\"btn light-blue\" data-toggle=\"modal\" data-target=\"#exampleModalCenter\">\n  Search Address\n</button>\n\n<form #addressForm=\"ngForm\" class=\"address-form\"novalidate >\n   \n<div class=\"form-group\">\n   <label for=\"line_1\">Line 1</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"line_1\"\n     name=\"line_1\"\n     [(ngModel)]=\"address.line_1\"\n     #line_1=\"ngModel\"\n     placeholder=\"Enter Address\">\n </div>\n <div class=\"form-group\">\n   <label for=\"line_2\">Line 2</label>\n   <input\n     type=\"text\"\n     class=\"in-marg form-control col-8\"\n     id=\"line_2\"\n     name=\"line_2\"\n     [(ngModel)]=\"address.line_2\"\n     #line_2=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"line_3\">Line 3</label>\n   <input\n     type=\"text\"\n     class=\"in-marg form-control col-8\"\n     id=\"line_3\"\n     name=\"line_3\"\n     [(ngModel)]=\"address.line_3\"\n     #line_3=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"city\">City</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"city\"\n     name=\"city\"\n     [(ngModel)]=\"address.city\"\n     #city=\"ngModel\"\n     placeholder=\"City\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"region\">Region/State</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"region_state\"\n     name=\"region_state\"\n     [(ngModel)]=\"address.region_state\"\n     #region_state=\"ngModel\"\n     placeholder=\"Enter Region/State\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"country\">Country</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"country\"\n     name=\"country\"\n     [(ngModel)]=\"address.country\"\n     #country=\"ngModel\"\n     placeholder=\"Country\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"zipcode\">Zip Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"zipcode\"\n     name=\"zipcode\"\n     [(ngModel)]=\"address.zipcode\"\n     #zipcode=\"ngModel\"\n     placeholder=\"Enter Zip Code\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"latitude\">Latitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"latitude\"\n     name=\"latitude\"\n     [(ngModel)]=\"address.latitude\"\n     #latitude=\"ngModel\"\n     placeholder=\"Enter Latitude\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"longitude\">Longitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"longitude\"\n     name=\"longitude\"\n     [(ngModel)]=\"address.longitude\"\n     #longitude=\"ngModel\"\n     placeholder=\"Enter Longitude\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"other_details\">Other Details</label>\n   <input\n     type=\"text\"\n     class=\"in-marg form-control col-8\"\n     id=\"other_details\"\n     name=\"other_details\"\n     [(ngModel)]=\"address.other_details\"\n     #other_details=\"ngModel\"\n     placeholder=\"Enter Other Details\">\n </div>\n \n <button [disabled]=\"!addressForm.form.valid\" class=\"nextPage btn btn-primary\">Continue</button>\n\n</form>\n\n</div>\n\n\n\n<!-- Modal -->\n<div class=\"modal fade\" id=\"exampleModalCenter\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalCenterTitle\" aria-hidden=\"true\">\n  <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"exampleModalLongTitle\">Search Address</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <div class=\"form-group\">\n        <input id=\"search_address\" name=\"search_address\"  placeholder=\"search for location\"  type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"off\" class=\"form-control\" [(ngModel)]=\"searchControl\" #search_address=\"ngModel\">\n</div>\n\n <agm-map \n  [latitude]=\"lat\"\n  [longitude]=\"lng\"\n  [zoom]=\"zoom\"\n  [disableDefaultUI]=\"false\"\n  [zoomControl]=\"false\"\n  (mapClick)=\"mapClicked($event)\">\n\n  <agm-marker class=\"agm\"\n      *ngFor=\"let m of markers; let i = index\"\n      (markerClick)=\"clickedMarker(m.label, i)\"\n      [latitude]=\"m.lat\"\n      [longitude]=\"m.lng\"\n      [label]=\"m.label\"\n      [markerDraggable]=\"m.draggable\"\n      (dragEnd)=\"markerDragEnd(m, $event)\">\n      \n    <agm-info-window>\n      <strong>InfoWindow content</strong>\n    </agm-info-window>\n    \n  </agm-marker>\n  \n  <agm-circle [latitude]=\"lat + 0.3\" [longitude]=\"lng\" \n      [radius]=\"5000\"\n      [fillColor]=\"'red'\"\n      [circleDraggable]=\"true\"\n      [editable]=\"true\">\n  </agm-circle>\n\n</agm-map>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>\n        <button type=\"button\" class=\"btn btn-primary\">Set Address</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
+module.exports = "\n<div>\n<!-- Button trigger modal -->\n<button type=\"button\" class=\"btn light-blue\" data-toggle=\"modal\" data-target=\"#exampleModalCenter\">\n  Search Address\n</button>\n\n<form #addressForm=\"ngForm\" class=\"address-form\"novalidate >\n   \n<div class=\"form-group\">\n   <label for=\"line_1\">Line 1</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"line_1\"\n     name=\"line_1\"\n     [(ngModel)]=\"site.addressline_1\"\n     #line_1=\"ngModel\"\n     placeholder=\"Enter Address\">\n </div>\n <div class=\"form-group\">\n   <label for=\"line_2\">Line 2</label>\n   <input\n     type=\"text\"\n     class=\"in-marg form-control col-8\"\n     id=\"line_2\"\n     name=\"line_2\"\n     [(ngModel)]=\"site.addressline_2\"\n     #line_2=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"line_3\">Line 3</label>\n   <input\n     type=\"text\"\n     class=\"in-marg form-control col-8\"\n     id=\"line_3\"\n     name=\"line_3\"\n     [(ngModel)]=\"site.addressline_3\"\n     #line_3=\"ngModel\"\n     placeholder=\"Address\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"city\">City</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"city\"\n     name=\"city\"\n     [(ngModel)]=\"site.addresscity\"\n     #city=\"ngModel\"\n     placeholder=\"City\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"region\">Region/State</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"region_state\"\n     name=\"region_state\"\n     [(ngModel)]=\"site.addressregion_state\"\n     #region_state=\"ngModel\"\n     placeholder=\"Enter Region/State\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"country\">Country</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"country\"\n     name=\"country\"\n     [(ngModel)]=\"site.addresscountry\"\n     #country=\"ngModel\"\n     placeholder=\"Country\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"zipcode\">Zip Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"zipcode\"\n     name=\"zipcode\"\n     [(ngModel)]=\"site.addresszipcode\"\n     #zipcode=\"ngModel\"\n     placeholder=\"Enter Zip Code\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"latitude\">Latitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"latitude\"\n     name=\"latitude\"\n     [(ngModel)]=\"site.addresslatitude\"\n     #latitude=\"ngModel\"\n     placeholder=\"Enter Latitude\">\n </div>\n\n <div class=\"form-group\">\n   <label for=\"longitude\">Longitude</label>\n   <input\n     type=\"text\"\n     required\n     class=\"in-marg form-control col-8\"\n     id=\"longitude\"\n     name=\"longitude\"\n     [(ngModel)]=\"site.addresslongitude\"\n     #longitude=\"ngModel\"\n     placeholder=\"Enter Longitude\">\n </div>\n\n<div class=\"form-group\">\n   <label for=\"other_details\">Other Details</label>\n   <input\n     type=\"text\"\n     class=\"in-marg form-control col-8\"\n     id=\"other_details\"\n     name=\"other_details\"\n     [(ngModel)]=\"site.addressother_details\"\n     #other_details=\"ngModel\"\n     placeholder=\"Enter Other Details\">\n </div>\n \n <button [disabled]=\"!addressForm.form.valid\" class=\"nextPage btn btn-primary\">Continue</button>\n\n</form>\n\n</div>\n\n\n\n<!-- Modal -->\n<div class=\"modal fade\" id=\"exampleModalCenter\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalCenterTitle\" aria-hidden=\"true\" >\n  <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"exampleModalLongTitle\">Search Address</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <div class=\"form-group\">\n        <input id=\"search_address\" name=\"search_address\"  placeholder=\"search for location\"  type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"off\" class=\"form-control\" [(ngModel)]=\"searchControl\" #search_address=\"ngModel\">\n</div>\n\n <agm-map \n  [latitude]=\"lat\"\n  [longitude]=\"lng\"\n  [zoom]=\"zoom\"\n  [disableDefaultUI]=\"false\"\n  [zoomControl]=\"false\"\n  (mapClick)=\"mapClicked($event)\">\n\n  <agm-marker class=\"agm\"\n      *ngFor=\"let m of markers; let i = index\"\n      (markerClick)=\"clickedMarker(m.label, i)\"\n      [latitude]=\"m.lat\"\n      [longitude]=\"m.lng\"\n      [label]=\"m.label\"\n      [markerDraggable]=\"m.draggable\"\n      (dragEnd)=\"markerDragEnd(m, $event)\">\n      \n    <agm-info-window>\n      <strong>InfoWindow content</strong>\n    </agm-info-window>\n    \n  </agm-marker>\n  \n  <agm-circle [latitude]=\"lat + 0.3\" [longitude]=\"lng\" \n      [radius]=\"5000\"\n      [fillColor]=\"'red'\"\n      [circleDraggable]=\"true\"\n      [editable]=\"true\">\n  </agm-circle>\n\n</agm-map>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>\n        <button type=\"button\" class=\"btn btn-primary\" >Set Address</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -1070,41 +1088,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var address_1 = __webpack_require__("./src/app/sites/address.ts");
 var core_2 = __webpack_require__("./node_modules/@agm/core/index.js");
+var sites_service_1 = __webpack_require__("./src/app/sites/sites-service.ts");
 var AddressComponent = /** @class */ (function () {
-    function AddressComponent(mapsAPILoader, ngZone) {
+    function AddressComponent(mapsAPILoader, ngZone, _sitesService) {
         this.mapsAPILoader = mapsAPILoader;
         this.ngZone = ngZone;
+        this._sitesService = _sitesService;
         this.zoom = 8;
         // initial center position for the map
         this.lat = 51.673858;
         this.lng = 7.815982;
         //load Places Autocomplete
-        this.markers = [
-            {
-                lat: 51.673858,
-                lng: 7.815982,
-                label: 'A',
-                draggable: true
-            },
-            {
-                lat: 51.373858,
-                lng: 7.215982,
-                label: 'B',
-                draggable: false
-            },
-            {
-                lat: 51.723858,
-                lng: 7.895982,
-                label: 'C',
-                draggable: true
-            }
-        ];
+        this.markers = [];
     }
     AddressComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.address = new address_1.Address;
+        this.site_subscription = this._sitesService.observedSite.subscribe(function (site) { return _this.site = site; }, function (err) { return console.log(err); }, function () { });
         this.api_key = "AIzaSyC8mUARmEjgn9lDp199rjvV8QpRr5o_W6s";
-        this.searchControl = "Seattle";
+        this.searchControl = "";
         this.input = document.getElementById("search_address");
         this.mapsAPILoader.load().then(function () {
             var autocomplete = new google.maps.places.Autocomplete(_this.input, {
@@ -1122,35 +1123,42 @@ var AddressComponent = /** @class */ (function () {
                     //set latitude, longitude and zoom
                     _this.lat = place.geometry.location.lat();
                     _this.lng = place.geometry.location.lng();
+                    _this.markers = [
+                        {
+                            lat: _this.lat,
+                            lng: _this.lng,
+                            draggable: true
+                        },
+                    ];
                     _this.zoom = 12;
                     _this.clearAddressfields();
-                    _this.address.longitude = _this.lat;
-                    _this.address.latitude = _this.lat;
+                    _this.site.address.longitude = _this.lat;
+                    _this.site.address.latitude = _this.lat;
                     console.log(place);
                     for (var i in place.address_components) {
                         if (place.address_components[i].types[0] === "street_number") {
-                            _this.address.line_1 = place.address_components[i].long_name;
+                            _this.site.address.line_1 = place.address_components[i].long_name;
                         }
                         if (place.address_components[i].types[0] === "route") {
-                            if (!_this.address.line_1) {
-                                _this.address.line_1 = place.address_components[i].long_name;
+                            if (!_this.site.address.line_1) {
+                                _this.site.address.line_1 = place.address_components[i].long_name;
                             }
                             else {
-                                _this.address.line_1 = _this.address.line_1 + " " + place.address_components[i].short_name;
+                                _this.site.address.line_1 = _this.site.address.line_1 + " " + place.address_components[i].short_name;
                             }
                         }
                         else if (place.address_components[i].types[0] === "postal_code") {
                             //casting to number
-                            _this.address.zipcode = +place.address_components[i].long_name;
+                            _this.site.address.zipcode = +place.address_components[i].long_name;
                         }
                         else if (place.address_components[i].types[0] === "country") {
-                            _this.address.country = place.address_components[i].long_name;
+                            _this.site.address.country = place.address_components[i].long_name;
                         }
                         else if (place.address_components[i].types[0] === "administrative_area_level_1") {
-                            _this.address.region_state = place.address_components[i].short_name;
+                            _this.site.address.region_state = place.address_components[i].short_name;
                         }
                         else if (place.address_components[i].types[0] === "locality") {
-                            _this.address.city = place.address_components[i].long_name;
+                            _this.site.address.city = place.address_components[i].long_name;
                         }
                     }
                 });
@@ -1158,10 +1166,10 @@ var AddressComponent = /** @class */ (function () {
         });
     };
     AddressComponent.prototype.clearAddressfields = function () {
-        this.address = new address_1.Address;
+        this.site.address = new address_1.Address;
     };
     AddressComponent.prototype.addAddress = function () {
-        this.address.form_status = true;
+        this.site.address.form_status = true;
     };
     AddressComponent.prototype.clickedMarker = function (label, index) {
         console.log("clicked the marker: " + (label || index));
@@ -1182,7 +1190,7 @@ var AddressComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/sites/sites-new/address/address.component.html"),
             styles: [__webpack_require__("./src/app/sites/sites-new/address/address.component.css")]
         }),
-        __metadata("design:paramtypes", [core_2.MapsAPILoader, core_1.NgZone])
+        __metadata("design:paramtypes", [core_2.MapsAPILoader, core_1.NgZone, sites_service_1.SitesService])
     ], AddressComponent);
     return AddressComponent;
 }());
@@ -1191,17 +1199,83 @@ exports.AddressComponent = AddressComponent;
 
 /***/ }),
 
-/***/ "./src/app/sites/sites-new/poc/poc.component.css":
+/***/ "./src/app/sites/sites-new/confirm/confirm.component.css":
 /***/ (function(module, exports) {
 
 module.exports = ""
 
 /***/ }),
 
+/***/ "./src/app/sites/sites-new/confirm/confirm.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div>\n   <p>Site Name: {{site.site_name}}</p>\n   <p>Site Code: {{site.site_code}}</p>\n   <p *ngIf=\"site.monitored_zone===1\">Monitored: Yes</p>\n   <p *ngIf=\"site.monitored_zone===0\">Monitored: No</p>\n   \n   <ul>\n    <li *ngIf=\"site.business_days[1].active\">Mon ~ <strong>Start: {{site.business_days[1].start || 'N/A'}} - End:  {{site.business_days[1].end || 'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[2].active\">Tue ~ <strong>Start: {{site.business_days[2].start || 'N/A'}} - End: {{site.business_days[2].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[3].active\">Wed ~ <strong>Start: {{site.business_days[3].start || 'N/A'}} - End: {{site.business_days[3].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[4].active\">Thu ~ <strong>Start: {{site.business_days[4].start || 'N/A'}} - End: {{site.business_days[4].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[5].active\">Fri ~ <strong>Start: {{site.business_days[5].start || 'N/A'}} - End: {{site.business_days[5].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[6].active\">Sat ~ <strong>Start: {{site.business_days[6].start ||'N/A'}} - End: {{site.business_days[6].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[0].active\">Sun ~ <strong>Start: {{site.business_days[0].start ||'N/A'}} - End: {{site.business_days[0].end ||'N/A'}}</strong></li>\n   </ul>\n   \n   <p>Address: {{site.address.line_1}}, {{site.address.city}}, {{site.address.region_state}}, {{site.address.country}}, {{site.address.zipcode}}</p>\n   <p>Latitude:  {{site.address.latitude}} </p>\n    <p>Longitude:  {{site.address.longitude}} </p>\n    \n    <button (click)=\"addSite()\">Add Site</button>\n</div>\n\n\n   "
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-new/confirm/confirm.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var sites_service_1 = __webpack_require__("./src/app/sites/sites-service.ts");
+var ConfirmComponent = /** @class */ (function () {
+    function ConfirmComponent(_sitesService) {
+        this._sitesService = _sitesService;
+    }
+    ConfirmComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.site_subscription = this._sitesService.observedSite.subscribe(function (site) { return _this.site = site; }, function (err) { return console.log(err); }, function () { });
+        this.pages_subscription = this._sitesService.observedPages.subscribe(function (pages) { return _this.pages = pages; }, function (err) { return console.log(err); }, function () { });
+    };
+    ConfirmComponent.prototype.addSite = function () {
+        this._sitesService.addSite(this.site)
+            .then(function (data) {
+            console.log(data);
+        })
+            .catch(function (err) {
+            console.log(err);
+        });
+    };
+    ConfirmComponent.prototype.ngOnDestroy = function () {
+    };
+    ConfirmComponent = __decorate([
+        core_1.Component({
+            selector: 'app-confirm',
+            template: __webpack_require__("./src/app/sites/sites-new/confirm/confirm.component.html"),
+            styles: [__webpack_require__("./src/app/sites/sites-new/confirm/confirm.component.css")]
+        }),
+        __metadata("design:paramtypes", [sites_service_1.SitesService])
+    ], ConfirmComponent);
+    return ConfirmComponent;
+}());
+exports.ConfirmComponent = ConfirmComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/sites/sites-new/poc/poc.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ".gar-list{\n    margin-top:0.5em;\n}\n\ninput,label{\n   margin: 0.5em;\n}\n\nselect.form-control{\n    width: 60%;\n}\n\n.nextPage{\n    position: relative;\n    left: 78%;\n    margin-bottom: 3px;\n}"
+
+/***/ }),
+
 /***/ "./src/app/sites/sites-new/poc/poc.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<form #pocForm=\"ngForm\"  novalidate>\n    <label for=\"asm_email\">ASM</label>\n    <input \n        type=\"email\"\n        required\n        name=\"asm_email\"\n        [(ngModel)]=\"this.site.ASM\"\n        #asm_email=\"ngModel\"\n    ><br>\n    <label for=\"rsm_email\">RSM</label>\n    <input \n        type=\"email\"\n        required\n        name=\"rsm_email\"\n        [(ngModel)]=\"this.site.RSM\"\n        #rsm_email=\"ngModel\"\n    ><br>\n    <label for=\"\">General Alarm Responder</label>\n        <select name=\"gar\" id=\"\"[(ngModel)]=\"this.GAR.poc_type\" #gar=\"ngModel\" class=\"form-control form-control-sm\">\n         <option value=\"null\">Choose POC Method</option>\n         <option value=\"email\">Email</option>\n         <option value=\"cell\">Cell Number</option>\n         <option value=\"office\">Office Number</option>\n        </select>\n    <label for=\"poc_value\">POC Value</label><input class=\"form-control\" type=\"text\" required name=\"poc_value\" [(ngModel)]=\"this.GAR.poc_value\" #poc_value=\"ngModel\"><br>\n\n\n\n<div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"bh_check\"\n  name=\"bh_check\"\n  required\n  [(ngModel)]=\"this.GAR.available.bh\"\n  #bh_check=\"ngModel\"\n  [value]=\"true\">\n  <label class=\"form-check-label\" id=\"checkboxlabel\" for=\"inlineCheckbox\">Available Business Hours</label>\n</div>\n\n<div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"ah_check\"\n  name=\"ah_check\"\n  required\n  [(ngModel)]=\"this.GAR.available.ah\"\n  #ah_check=\"ngModel\"\n  [value]=\"false\">\n  <label class=\"form-check-label\" id=\"checkboxlabel\" for=\"inlineCheckbox\">Available After Hours</label>\n</div>\n<i class=\"fa fa-plus\" aria-hidden=\"true\" (click)=\"addGAR()\"></i>\n<table class=\"table table-sm\">\n    <tr>\n        <th>Order of contact</th>\n        <th>Method of contact</th>\n        <th>Number/Email</th>\n        <th></th>\n    </tr>\n    <tr *appWhile=\"pocs,let contact\">\n        <td>{{contact.order}}</td>\n        <td>{{contact.poc_type}}</td>\n        <td>{{contact.poc_value}}</td>\n        <i class=\"fa fa-window-close\" aria-hidden=\"true\" (click)=\"removePOC(contact)\"></i>\n\n    </tr>\n</table>\n    \n    <button [disabled]=\"!pocForm.form.valid\" class=\"nextPage btn btn-primary\">Continue</button>\n</form>\n"
+module.exports = "<div class=\"poc-form\">\n    <form #pocForm=\"ngForm\"  novalidate>\n    <label for=\"asm_email\">ASM</label>\n    <input \n        type=\"email\"\n        required\n        name=\"asm_email\"\n        [(ngModel)]=\"this.site.ASM\"\n        #asm_email=\"ngModel\"\n    ><br>\n    <label for=\"rsm_email\">RSM</label>\n    <input \n        type=\"email\"\n        required\n        name=\"rsm_email\"\n        [(ngModel)]=\"this.site.RSM\"\n        #rsm_email=\"ngModel\"\n    ><br>\n    <label for=\"gar\">General Alarm Responder</label>\n        <select name=\"gar\" id=\"method-of-contact\"[(ngModel)]=\"this.GAR.poc_type\" #gar=\"ngModel\" class=\"form-control form-control-sm col-4\" >\n         <option value=\"null\">Choose POC Method</option>\n         <option value=\"email\">Email</option>\n         <option value=\"cell\">Cell Number</option>\n         <option value=\"office\">Office Number</option>\n        </select>\n    <label for=\"poc_value\">Email/Phone</label><input (keyup.enter)=\"addGAR()\" class=\"form-control col-5\" type=\"text\"  name=\"poc_value\" [(ngModel)]=\"this.GAR.poc_value\" #poc_value=\"ngModel\"><br>\n\n\n\n\n<div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"bh_check\"\n  name=\"hours\"\n  required\n  [(ngModel)]=\"this.GAR.available.bh\"\n  [value]=\"false\">\n  <label class=\"form-check-label\" id=\"checkboxlabel\" for=\"inlineCheckbox\">Available Business Hours</label>\n</div>\n\n<div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"ah_check\"\n  name=\"hours\"\n  required\n  [(ngModel)]=\"this.GAR.available.ah\"\n  [value]=\"true\">\n  <label class=\"form-check-label\" id=\"checkboxlabel\" for=\"inlineCheckbox\">Available After Hours</label>\n</div>\n<i class=\"fa fa-plus\" aria-hidden=\"true\" (click)=\"addGAR()\"></i><br>\n<table class=\"table table-sm gar-list\" *ngIf=\"site.pocs.size > 0\">\n    <tr>\n        <th>Order of contact</th>\n        <th>Method of contact</th>\n        <th>Number/Email</th>\n        <th></th>\n    </tr>\n    <tr *appWhile=\"site.pocs,let contact\" ondragstart=\"dragStart($event)\" draggable=\"true\">\n        <td>{{contact.order}}</td>\n        <td>{{contact.poc_type}}</td>\n        <td>{{contact.poc_value}}</td>\n        <i class=\"fa fa-window-close\" aria-hidden=\"true\" (click)=\"removeGAR(contact)\"></i>\n\n    </tr>\n</table>\n    \n    <button [disabled]=\"!pocForm.form.valid\" class=\"nextPage btn btn-primary\" (click)=\"toConfirm()\">Continue</button>\n</form>\n\n</div>"
 
 /***/ }),
 
@@ -1223,17 +1297,58 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var poc_1 = __webpack_require__("./src/app/sites/poc.ts");
 var sites_service_1 = __webpack_require__("./src/app/sites/sites-service.ts");
+var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 var PocComponent = /** @class */ (function () {
-    function PocComponent(_sitesService) {
+    function PocComponent(_sitesService, _router) {
         this._sitesService = _sitesService;
+        this._router = _router;
     }
     PocComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.pocs_subscription = this._sitesService.observed_new_site_pocs.subscribe(function (pocs) { return _this.pocs = pocs; }, function (err) { return console.log(err); }, function () { });
         this.site_subscription = this._sitesService.observedSite.subscribe(function (site) { return _this.site = site; }, function (err) { return console.log(err); }, function () { });
+        this.pages_subscription = this._sitesService.observedPages.subscribe(function (pages) { return _this.pages = pages; }, function (err) { return console.log(err); }, function () { });
+        console.log(this.site);
         this.GAR = new poc_1.POC;
         this.GAR.poc_name = "GAR";
         this.initial_order = 0;
+    };
+    PocComponent.prototype.addGAR = function () {
+        console.log("add GAR");
+        this.initial_order += 1;
+        this.GAR.order = this.initial_order;
+        this.site.pocs.insert(this.GAR);
+        console.log(this.site.pocs.size);
+        this.site.pocs.last_changed = Date.now();
+        this._sitesService.updateSite(this.site);
+        this.GAR = new poc_1.POC;
+        this.GAR.poc_name = "GAR";
+    };
+    PocComponent.prototype.exchangeGAROrder = function (gar1, gar2) {
+        this.site.pocs.exchange_orders(gar1, gar2);
+        this.site.pocs.last_changed = Date.now();
+        this._sitesService.updateSite(this.site);
+    };
+    PocComponent.prototype.removeGAR = function (gar) {
+        console.log("remove", gar);
+        this.site.pocs.delete_node(gar);
+        this.site.pocs.last_changed = Date.now();
+        this._sitesService.updateSite(this.site);
+    };
+    PocComponent.prototype.dragStart = function (event) {
+        console.log(event);
+    };
+    PocComponent.prototype.dragEnd = function (event) {
+        console.log(event);
+    };
+    PocComponent.prototype.toConfirm = function () {
+        this.site.form_status = true;
+        for (var key in this.pages) {
+            this.pages[key] = null;
+        }
+        this.pages['confirm'] = true;
+        this._sitesService.updatePages(this.pages);
+        // this._router.navigate(["sites/new"])
+        console.log(this.pages);
     };
     PocComponent.prototype.ngOnDestroy = function () {
     };
@@ -1243,7 +1358,7 @@ var PocComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/sites/sites-new/poc/poc.component.html"),
             styles: [__webpack_require__("./src/app/sites/sites-new/poc/poc.component.css")]
         }),
-        __metadata("design:paramtypes", [sites_service_1.SitesService])
+        __metadata("design:paramtypes", [sites_service_1.SitesService, router_1.Router])
     ], PocComponent);
     return PocComponent;
 }());
@@ -1262,7 +1377,7 @@ module.exports = "input{\n    width: 70%;\n}\n\nform,.form-title{\n   \n    padd
 /***/ "./src/app/sites/sites-new/sites-new.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"site-form-container\">\n<nav class=\"navbar navbar-light\" style=\"background-color: #e3f2fd;\">\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:pages['general_info'], 'tabs':true}\" (click)=\"swicthPages('general_info')\">General Info</div>\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:pages['address'],'tabs':true}\" (click)=\"swicthPages('address')\">Address</div>\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:pages['poc'], 'tabs':true}\" (click)=\"swicthPages('poc')\">POC</div>\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:pages['confirm'], 'tabs':true}\" (click)=\"swicthPages('confirm')\">Confirm</div>\n</nav>\n\n<div class=\"site-form-content\">\n <h1 class=\"form-title\">New Site</h1>\n\n<!--General Site info-->\n\n<form #siteForm=\"ngForm\" novalidate *ngIf=\"pages.general_info\">\n <div class=\"form-group form-group-sm\">\n   <label for=\"site_name\">Site Name</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_name\"\n     name=\"site_name\"\n     [(ngModel)]=\"site.site_name\"\n     #site_name=\"ngModel\"\n     placeholder=\"Enter Site Name\">\n </div>\n <div class=\"form-group\">\n   <label for=\"site_code\">Site Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_code\"\n     name=\"site_code\"\n     [(ngModel)]=\"site.site_code\"\n     #site_code=\"ngModel\"\n     placeholder=\"Enter Site Code\">\n </div>\n\n <p>Site Monitored?</p>\n <div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox1\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  value=\"1\">\n  <label class=\"form-check-label\" id=\"checkboxlabel\" for=\"inlineCheckbox\">Yes</label>\n</div>\n\n<div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox2\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  [value]=\"0\">\n  <label class=\"form-check-label\" id=\"checkboxlabel\" for=\"inlineCheckbox\">No</label>\n</div>\n<br>\n\n\n<div class=\"weekDays-selector\">\n    <p>Select Business Days</p>\n  \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-mon\" class=\"weekday\" (click)=\"dayClicked(1)\"/>\n      <label for=\"weekday-mon\" >M</label>\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[1].active\" (click)=\"open(1,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[1].active\" (click)=\"open(1,'end')\"></i>\n  </div>\n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-tue\" class=\"weekday\" (click)=\"dayClicked(2)\"/>\n      <label for=\"weekday-tue\">T</label>\n       <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[2].active\" (click)=\"open(2,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[2].active\" (click)=\"open(2,'end')\"></i>\n \n  </div>\n  \n  <div class=\"day-time\">\n       <input type=\"checkbox\" id=\"weekday-wed\" class=\"weekday\" (click)=\"dayClicked(3)\"/>\n       <label for=\"weekday-wed\">W</label>\n       <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[3].active\" (click)=\"open(3,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[3].active\" (click)=\"open(3,'end')\"></i>\n  </div>\n \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-thu\" class=\"weekday\" (click)=\"dayClicked(4)\"/>\n      <label for=\"weekday-thu\">T</label>\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[4].active\" (click)=\"open(4,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[4].active\" (click)=\"open(4,'end')\"></i>\n  </div>\n  \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-fri\" class=\"weekday\" (click)=\"dayClicked(5)\"/>\n      <label for=\"weekday-fri\">F</label>\n     <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[5].active\" (click)=\"open(5,'start')\"></i>\n     <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[5].active\" (click)=\"open(5,'end')\"></i>\n      \n  </div>\n  \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-sat\" class=\"weekday\" (click)=\"dayClicked(6)\"/>\n      <label for=\"weekday-sat\">S</label>\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[6].active\" (click)=\"open(6,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[6].active\" (click)=\"open(6,'end')\"></i>\n  </div>\n  \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-sun\" class=\"weekday\" (click)=\"dayClicked(0)\" />\n      <label for=\"weekday-sun\">S</label>\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[0].active\" (click)=\"open(0,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[0].active\" (click)=\"open(0,'end')\"></i>\n  </div>\n  \n \n</div>\n<ul>\n    <li *ngIf=\"site.business_days[1].active\">Mon ~ <strong>Start: {{site.business_days[1].start || 'N/A'}} - End:  {{site.business_days[1].end || 'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[2].active\">Tue ~ <strong>Start: {{site.business_days[2].start || 'N/A'}} - End: {{site.business_days[2].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[3].active\">Wed ~ <strong>Start: {{site.business_days[3].start || 'N/A'}} - End: {{site.business_days[3].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[4].active\">Thu ~ <strong>Start: {{site.business_days[4].start || 'N/A'}} - End: {{site.business_days[4].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[5].active\">Fri ~ <strong>Start: {{site.business_days[5].start || 'N/A'}} - End: {{site.business_days[5].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[6].active\">Sat ~ <strong>Start: {{site.business_days[6].start ||'N/A'}} - End: {{site.business_days[6].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[0].active\">Sun ~ <strong>Start: {{site.business_days[0].start ||'N/A'}} - End: {{site.business_days[0].end ||'N/A'}}</strong></li>\n</ul>\n\n\n<!--Quick set time for all business hours-->\n\n<input id=\"check_business_hours\" id=\"inlineCheckbox3\" type=\"checkbox\" (change)=\"checkBusinessHours()\"><label for=\"\">Quick set</label>\n <div class=\"day-time weekDays-selector\" *ngIf=\"all_business\">\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[5].active\" (click)=\"open('all','start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[5].active\" (click)=\"open('all','end')\"></i>\n  </div><br>\n\n\n <button [disabled]=\"!siteForm.form.valid\" (click)=\"addSite()\" class=\"btn btn-primary nextPage\">Continue</button>\n</form>\n\n<app-address *ngIf=\"this.pages['address']\"></app-address>\n\n<app-poc *ngIf=\"this.pages['poc']\"></app-poc>\n\n</div>\n\n</div>\n\n\n\n\n\n\n\n"
+module.exports = "\n<div class=\"site-form-container\">\n<nav class=\"navbar navbar-light\" style=\"background-color: #e3f2fd;\">\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:pages['general_info'], 'tabs':true}\" (click)=\"swicthPages('general_info')\">General Info</div>\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:pages['address'],'tabs':true}\" (click)=\"swicthPages('address')\">Address</div>\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:pages['poc'], 'tabs':true}\" (click)=\"swicthPages('poc')\">POC</div>\n  <div class=\"border col-sm-3\" [ngClass]=\"{orange:pages['confirm'], 'tabs':true}\" (click)=\"swicthPages('confirm')\">Confirm</div>\n</nav>\n\n<div class=\"site-form-content\">\n <h1 class=\"form-title\">New Site</h1>\n\n<!--General Site info-->\n\n<form #siteForm=\"ngForm\" novalidate *ngIf=\"pages.general_info\">\n <div class=\"form-group form-group-sm\">\n   <label for=\"site_name\">Site Name</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_name\"\n     name=\"site_name\"\n     [(ngModel)]=\"site.site_name\"\n     #site_name=\"ngModel\"\n     placeholder=\"Enter Site Name\">\n </div>\n <div class=\"form-group\">\n   <label for=\"site_code\">Site Code</label>\n   <input\n     type=\"text\"\n     required\n     class=\"form-control\"\n     id=\"site_code\"\n     name=\"site_code\"\n     [(ngModel)]=\"site.site_code\"\n     #site_code=\"ngModel\"\n     placeholder=\"Enter Site Code\">\n </div>\n\n <p>Site Monitored?</p>\n <div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox1\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  value=\"1\">\n  <label class=\"form-check-label\" id=\"checkboxlabel\" for=\"inlineCheckbox\">Yes</label>\n</div>\n\n<div class=\"form-check form-check-inline\">\n  <input\n  class=\"form-check-input radio\"\n  type=\"radio\"\n  id=\"inlineCheckbox2\"\n  name=\"monitored_zone\"\n  required\n  [(ngModel)]=\"site.monitored_zone\"\n  #monitored_zone=\"ngModel\"\n  [value]=\"0\">\n  <label class=\"form-check-label\" id=\"checkboxlabel\" for=\"inlineCheckbox\">No</label>\n</div>\n<br>\n\n\n<div class=\"weekDays-selector\">\n    <p>Select Business Days</p>\n  \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-mon\" class=\"weekday\" (click)=\"dayClicked(1)\"/>\n      <label for=\"weekday-mon\" >M</label>\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[1].active\" (click)=\"open(1,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[1].active\" (click)=\"open(1,'end')\"></i>\n  </div>\n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-tue\" class=\"weekday\" (click)=\"dayClicked(2)\"/>\n      <label for=\"weekday-tue\">T</label>\n       <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[2].active\" (click)=\"open(2,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[2].active\" (click)=\"open(2,'end')\"></i>\n \n  </div>\n  \n  <div class=\"day-time\">\n       <input type=\"checkbox\" id=\"weekday-wed\" class=\"weekday\" (click)=\"dayClicked(3)\"/>\n       <label for=\"weekday-wed\">W</label>\n       <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[3].active\" (click)=\"open(3,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[3].active\" (click)=\"open(3,'end')\"></i>\n  </div>\n \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-thu\" class=\"weekday\" (click)=\"dayClicked(4)\"/>\n      <label for=\"weekday-thu\">T</label>\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[4].active\" (click)=\"open(4,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[4].active\" (click)=\"open(4,'end')\"></i>\n  </div>\n  \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-fri\" class=\"weekday\" (click)=\"dayClicked(5)\"/>\n      <label for=\"weekday-fri\">F</label>\n     <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[5].active\" (click)=\"open(5,'start')\"></i>\n     <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[5].active\" (click)=\"open(5,'end')\"></i>\n      \n  </div>\n  \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-sat\" class=\"weekday\" (click)=\"dayClicked(6)\"/>\n      <label for=\"weekday-sat\">S</label>\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[6].active\" (click)=\"open(6,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[6].active\" (click)=\"open(6,'end')\"></i>\n  </div>\n  \n  <div class=\"day-time\">\n      <input type=\"checkbox\" id=\"weekday-sun\" class=\"weekday\" (click)=\"dayClicked(0)\" />\n      <label for=\"weekday-sun\">S</label>\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[0].active\" (click)=\"open(0,'start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[0].active\" (click)=\"open(0,'end')\"></i>\n  </div>\n  \n \n</div>\n<ul>\n    <li *ngIf=\"site.business_days[1].active\">Mon ~ <strong>Start: {{site.business_days[1].start || 'N/A'}} - End:  {{site.business_days[1].end || 'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[2].active\">Tue ~ <strong>Start: {{site.business_days[2].start || 'N/A'}} - End: {{site.business_days[2].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[3].active\">Wed ~ <strong>Start: {{site.business_days[3].start || 'N/A'}} - End: {{site.business_days[3].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[4].active\">Thu ~ <strong>Start: {{site.business_days[4].start || 'N/A'}} - End: {{site.business_days[4].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[5].active\">Fri ~ <strong>Start: {{site.business_days[5].start || 'N/A'}} - End: {{site.business_days[5].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[6].active\">Sat ~ <strong>Start: {{site.business_days[6].start ||'N/A'}} - End: {{site.business_days[6].end ||'N/A'}}</strong></li>\n     <li *ngIf=\"site.business_days[0].active\">Sun ~ <strong>Start: {{site.business_days[0].start ||'N/A'}} - End: {{site.business_days[0].end ||'N/A'}}</strong></li>\n</ul>\n\n\n<!--Quick set time for all business hours-->\n\n<input id=\"check_business_hours\" type=\"checkbox\" (change)=\"checkBusinessHours()\"><label for=\"\">Quick set</label>\n <div class=\"day-time weekDays-selector\" *ngIf=\"all_business\">\n      <i class=\"fa fa-sun-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[5].active\" (click)=\"open('all','start')\"></i>\n      <i class=\"fa fa-moon-o col col-3\" aria-hidden=\"true\" *ngIf=\"site.business_days[5].active\" (click)=\"open('all','end')\"></i>\n  </div><br>\n\n\n <button [disabled]=\"!siteForm.form.valid\" (click)=\"addSite()\" class=\"btn btn-primary nextPage\">Continue</button>\n</form>\n\n<app-address *ngIf=\"this.pages['address']\"></app-address>\n\n<app-poc *ngIf=\"this.pages['poc']\"></app-poc>\n\n<app-confirm *ngIf=\"this.pages['confirm'] && site.form_status\"></app-confirm>\n\n<p *ngIf=\"this.pages['confirm'] && !this.site.form_status\">Please complete the form</p>\n\n</div>\n\n</div>\n\n\n\n\n\n\n\n"
 
 /***/ }),
 
@@ -1294,18 +1409,11 @@ var SitesNewComponent = /** @class */ (function () {
     SitesNewComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.site_subscription = this._sitesService.observedSite.subscribe(function (site) { return _this.site = site; }, function (err) { return console.log(err); }, function () { });
+        this.pages_subscription = this._sitesService.observedPages.subscribe(function (pages) { return _this.pages = pages; }, function (err) { return console.log(err); }, function () { });
         this.address = new address_1.Address;
-        this.pages = {
-            general_info: true,
-            address: null,
-            poc: null,
-            confirm: null
-        };
         this.all_business = false;
         //for styling
         this.all_days_selected = false;
-        /// POC linked list 
-        this.pocs_subscription = this._sitesService.observed_new_site_pocs.subscribe(function (pocs) { return _this.pocs = pocs; }, function (err) { return console.log(err); }, function () { });
         this.GAR = new poc_1.POC;
         this.GAR.poc_name = "GAR";
         this.initial_order = 0;
@@ -1317,9 +1425,8 @@ var SitesNewComponent = /** @class */ (function () {
         };
     };
     SitesNewComponent.prototype.addSite = function () {
-        console.dir(this.address);
         console.dir(this.site);
-        this._sitesService.addSite(this.site, this.address)
+        this._sitesService.addSite(this.site)
             .then(function (data) {
             console.log(data);
             console.log(data[0].address_id.line_1);
@@ -1333,6 +1440,7 @@ var SitesNewComponent = /** @class */ (function () {
             this.pages[key] = null;
         }
         this.pages[page] = true;
+        this._sitesService.updatePages(this.pages);
     };
     SitesNewComponent.prototype.addAddress = function () {
         this.address.form_status = true;
@@ -1368,56 +1476,32 @@ var SitesNewComponent = /** @class */ (function () {
         });
     };
     SitesNewComponent.prototype.checkBusinessHours = function () {
-        var mon, tue, wed, thur, fri, sat, sun;
+        var mon, tue, wed, thur, fri, sat, sun, all;
         console.log("Business hours checked");
         this.all_business = !this.all_business;
         this.all_days_selected = !this.all_days_selected;
         console.log(this.all_business);
         console.log(document);
+        all = document.getElementById("check_business_hours");
         mon = document.getElementById("weekday-mon");
-        mon.checked = !mon.checked;
+        mon.checked = all.checked;
         tue = document.getElementById("weekday-tue");
-        tue.checked = !tue.checked;
+        tue.checked = all.checked;
         wed = document.getElementById("weekday-wed");
-        wed.checked = !wed.checked;
+        wed.checked = all.checked;
         thur = document.getElementById("weekday-thu");
-        thur.checked = !thur.checked;
+        thur.checked = all.checked;
         fri = document.getElementById("weekday-fri");
-        fri.checked = !fri.checked;
+        fri.checked = all.checked;
         sat = document.getElementById("weekday-sat");
-        sat.checked = !sat.checked;
+        sat.checked = all.checked;
         sun = document.getElementById("weekday-sun");
-        sun.checked = !sun.checked;
+        sun.checked = all.checked;
         for (var key in this.site.business_days) {
             console.log(this.site.business_days[key]);
-            this.site.business_days[key].active = !this.site.business_days[key].active;
+            this.site.business_days[key].active = this.all_business;
         }
         console.log(this.all_days_selected);
-    };
-    SitesNewComponent.prototype.addGAR = function () {
-        console.log("add GAR");
-        this.initial_order += 1;
-        this.GAR.order = this.initial_order;
-        var GAR2 = new poc_1.POC;
-        GAR2.poc_name = "Test";
-        GAR2.order = 2;
-        var GAR3 = new poc_1.POC;
-        GAR3.poc_name = "Switch";
-        GAR3.order = 3;
-        this.pocs.insert(this.GAR);
-        this.pocs.insert(GAR2);
-        this.pocs.insert(GAR3);
-        this.pocs.exchange_orders(this.GAR, GAR3);
-        this.pocs.last_changed = Date.now();
-        this._sitesService.updateNewSitePOCS(this.pocs);
-        this.GAR = new poc_1.POC;
-        this.GAR.poc_name = "GAR";
-    };
-    SitesNewComponent.prototype.removePOC = function (contact) {
-        console.log("remove", contact);
-        this.pocs.delete_node(contact);
-        this.pocs.last_changed = Date.now();
-        this._sitesService.updateNewSitePOCS(this.pocs);
     };
     SitesNewComponent.prototype.ngOnDestroy = function () {
     };
@@ -1457,26 +1541,29 @@ __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
 __webpack_require__("./node_modules/rxjs/_esm5/add/operator/toPromise.js");
 var BehaviorSubject_1 = __webpack_require__("./node_modules/rxjs/_esm5/BehaviorSubject.js");
 var site_1 = __webpack_require__("./src/app/sites/site.ts");
-var sll_1 = __webpack_require__("./src/app/sites/linked_list/sll.ts");
 var SitesService = /** @class */ (function () {
     function SitesService(_http) {
         this._http = _http;
         this.observedSites = new BehaviorSubject_1.BehaviorSubject([]);
         this.observedSite = new BehaviorSubject_1.BehaviorSubject(new site_1.Site);
-        this.observed_new_site_pocs = new BehaviorSubject_1.BehaviorSubject(new sll_1.SLL);
+        this.observedPages = new BehaviorSubject_1.BehaviorSubject({
+            general_info: true,
+            address: null,
+            poc: null,
+            confirm: null
+        });
     }
     SitesService.prototype.updateSite = function (site) {
         this.observedSite.next(site);
     };
+    SitesService.prototype.updatePages = function (pages) {
+        this.observedPages.next(pages);
+    };
     SitesService.prototype.updateSites = function (sites) {
         this.observedSites.next(sites);
     };
-    SitesService.prototype.updateNewSitePOCS = function (pocs) {
-        console.log("pocs updated");
-        this.observed_new_site_pocs.next(pocs);
-    };
-    SitesService.prototype.addSite = function (site, address) {
-        return this._http.post('/sites/new', { 'site': site, 'address': address }).map(function (data) { return data.json(); }).toPromise();
+    SitesService.prototype.addSite = function (site) {
+        return this._http.post('/sites/new', { 'site': site }).map(function (data) { return data.json(); }).toPromise();
     };
     SitesService = __decorate([
         core_1.Injectable(),

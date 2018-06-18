@@ -15,7 +15,7 @@
      class="in-marg form-control col-8"
      id="line_1"
      name="line_1"
-     [(ngModel)]="address.line_1"
+     [(ngModel)]="site.addressline_1"
      #line_1="ngModel"
      placeholder="Enter Address">
  </div>
@@ -26,7 +26,7 @@
      class="in-marg form-control col-8"
      id="line_2"
      name="line_2"
-     [(ngModel)]="address.line_2"
+     [(ngModel)]="site.addressline_2"
      #line_2="ngModel"
      placeholder="Address">
  </div>
@@ -38,7 +38,7 @@
      class="in-marg form-control col-8"
      id="line_3"
      name="line_3"
-     [(ngModel)]="address.line_3"
+     [(ngModel)]="site.addressline_3"
      #line_3="ngModel"
      placeholder="Address">
  </div>
@@ -51,7 +51,7 @@
      class="in-marg form-control col-8"
      id="city"
      name="city"
-     [(ngModel)]="address.city"
+     [(ngModel)]="site.addresscity"
      #city="ngModel"
      placeholder="City">
  </div>
@@ -64,7 +64,7 @@
      class="in-marg form-control col-8"
      id="region_state"
      name="region_state"
-     [(ngModel)]="address.region_state"
+     [(ngModel)]="site.addressregion_state"
      #region_state="ngModel"
      placeholder="Enter Region/State">
  </div>
@@ -77,7 +77,7 @@
      class="in-marg form-control col-8"
      id="country"
      name="country"
-     [(ngModel)]="address.country"
+     [(ngModel)]="site.addresscountry"
      #country="ngModel"
      placeholder="Country">
  </div>
@@ -90,7 +90,7 @@
      class="in-marg form-control col-8"
      id="zipcode"
      name="zipcode"
-     [(ngModel)]="address.zipcode"
+     [(ngModel)]="site.addresszipcode"
      #zipcode="ngModel"
      placeholder="Enter Zip Code">
  </div>
@@ -103,7 +103,7 @@
      class="in-marg form-control col-8"
      id="latitude"
      name="latitude"
-     [(ngModel)]="address.latitude"
+     [(ngModel)]="site.addresslatitude"
      #latitude="ngModel"
      placeholder="Enter Latitude">
  </div>
@@ -116,7 +116,7 @@
      class="in-marg form-control col-8"
      id="longitude"
      name="longitude"
-     [(ngModel)]="address.longitude"
+     [(ngModel)]="site.addresslongitude"
      #longitude="ngModel"
      placeholder="Enter Longitude">
  </div>
@@ -128,7 +128,7 @@
      class="in-marg form-control col-8"
      id="other_details"
      name="other_details"
-     [(ngModel)]="address.other_details"
+     [(ngModel)]="site.addressother_details"
      #other_details="ngModel"
      placeholder="Enter Other Details">
  </div>
@@ -142,7 +142,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -190,7 +190,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Set Address</button>
+        <button type="button" class="btn btn-primary" >Set Address</button>
       </div>
     </div>
   </div>

@@ -5,22 +5,27 @@ import { POC } from '../poc'
  
 export class SLL{
     head: Node;
+    size:number;
     last_changed: number;
     constructor(new_poc=null){
         if(new_poc){
             this.head = new Node(new_poc);
+            this.size = 1;
         }
-        this.last_changed= Date.now()
         
+        this.last_changed= Date.now()
+        this.size=0;
     }
     insert(new_poc){
         if(!this.head){
             this.head = new Node(new_poc);
+            this.size++;
         }
         else if(this.head.poc.order > new_poc.order){
             let temp = this.head ;
             this.head= new Node (new_poc);
             this.head.next = temp;
+            this.size++;
         }
         else{
             let current= this.head 
@@ -29,6 +34,7 @@ export class SLL{
                 current= current.next
             }
             current.next = new Node( new_poc);
+            this.size++;
             // console.log("after",current)
 
         }
@@ -65,6 +71,7 @@ export class SLL{
                 temp = this.head;
                 this.head = this.head.next;
                 console.log("temp",temp)
+                this.size --;
                 return temp
             }
             else{

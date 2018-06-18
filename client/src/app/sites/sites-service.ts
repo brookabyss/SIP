@@ -14,27 +14,35 @@ export class SitesService {
   
   observedSites = new BehaviorSubject([]);
   observedSite = new BehaviorSubject(new Site);
-  observed_new_site_pocs = new BehaviorSubject(new SLL);
+  observedPages = new BehaviorSubject({
+      general_info: true,
+      address: null,
+      poc:null,
+      confirm:null
+    });
   
+
   constructor(private _http: Http) { }
   
   updateSite(site){
       this.observedSite.next(site);
   }
   
+  updatePages(pages){
+      this.observedPages.next(pages);
+  }
+  
   updateSites(sites){
       this.observedSites.next(sites);
   }
   
-  updateNewSitePOCS(pocs){
-    console.log("pocs updated")
-    this.observed_new_site_pocs.next(pocs)
+  
+  
+  addSite(site){
+    return this._http.post('/sites/new',{'site':site}).map(data=>data.json()).toPromise();
   }
   
   
-  addSite(site,address){
-    return this._http.post('/sites/new',{'site':site,'address':address}).map(data=>data.json()).toPromise();
-  }
   
   
   

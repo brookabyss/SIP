@@ -1,6 +1,9 @@
 import { Component, OnInit, NgZone } from '@angular/core';
+import { Site } from '../../site'
 import { Address } from '../../address'
+import { Subscription } from 'rxjs/Subscription'
 import { MouseEvent, MapsAPILoader  } from '@agm/core';
+import { SitesService } from '../../sites-service'
 import {} from 'googlemaps'
 
 
@@ -11,26 +14,29 @@ import {} from 'googlemaps'
 })
 export class AddressComponent implements OnInit {
   
-  address: Address;
+  site: Site;
   api_key: string;
-  
   zoom: number = 8;
-  
   // initial center position for the map
   lat: number = 51.673858;
   lng: number = 7.815982;
   searchControl: string;
   input: HTMLInputElement;
   searched_place: any;
+  site_subscription: Subscription;
 
-  constructor(private mapsAPILoader: MapsAPILoader, private ngZone : NgZone) { }
+  constructor(private mapsAPILoader: MapsAPILoader, private ngZone : NgZone,  private _sitesService: SitesService) { }
 
   ngOnInit() {
-      this.address= new Address;
+      this.site_subscription= this._sitesService.observedSite.subscribe(
+        site => this.site = site,
+        err => console.log(err),
+        ()=>{}
+      )
+      
       this.api_key="AIzaSyC8mUARmEjgn9lDp199rjvV8QpRr5o_W6s";
-      this.searchControl= "Seattle";
+      this.searchControl= "";
       this.input= (<HTMLInputElement> document.getElementById("search_address"));
-  
       this.mapsAPILoader.load().then(()=>{
         let autocomplete = new google.maps.places.Autocomplete(this.input, {
             types: ["address"]
@@ -49,37 +55,45 @@ export class AddressComponent implements OnInit {
           //set latitude, longitude and zoom
           this.lat = place.geometry.location.lat();
           this.lng = place.geometry.location.lng();
+          this.markers=[
+	          {
+		        lat: this.lat,
+		        lng: this.lng,
+		        draggable: true
+	          },
+	 
+          ];
           this.zoom = 12;
           this.clearAddressfields();
-          this.address.longitude=this.lat;
-          this.address.latitude=this.lat;
+          this.site.address.longitude=this.lat;
+          this.site.address.latitude=this.lat;
           
           console.log(place)
           for(let i in place.address_components){
             if(place.address_components[i].types[0]==="street_number"){
-              this.address.line_1=place.address_components[i].long_name;
+              this.site.address.line_1=place.address_components[i].long_name;
             }
             if(place.address_components[i].types[0]==="route"){
-              if(!this.address.line_1){
-                 this.address.line_1=place.address_components[i].long_name;
+              if(!this.site.address.line_1){
+                 this.site.address.line_1=place.address_components[i].long_name;
               }
               else{
-                 this.address.line_1=this.address.line_1  + " " +  place.address_components[i].short_name;
+                 this.site.address.line_1=this.site.address.line_1  + " " +  place.address_components[i].short_name;
               }
              
             }
             else if(place.address_components[i].types[0]==="postal_code"){
               //casting to number
-              this.address.zipcode=+place.address_components[i].long_name;
+              this.site.address.zipcode=+place.address_components[i].long_name;
             }
             else if(place.address_components[i].types[0]==="country"){
-              this.address.country=place.address_components[i].long_name;
+              this.site.address.country=place.address_components[i].long_name;
             }
             else if(place.address_components[i].types[0]==="administrative_area_level_1"){
-              this.address.region_state=place.address_components[i].short_name;
+              this.site.address.region_state=place.address_components[i].short_name;
             }
             else if(place.address_components[i].types[0]==="locality"){
-              this.address.city=place.address_components[i].long_name;
+              this.site.address.city=place.address_components[i].long_name;
             }
             
             
@@ -92,20 +106,23 @@ export class AddressComponent implements OnInit {
 
   }
   
+  
+
+  
   clearAddressfields(){
-    this.address=new Address;
+    this.site.address=new Address;
   }
   
   
   
   addAddress(){
-    this.address.form_status= true;
+    this.site.address.form_status= true;
   }
-  
   
   
   clickedMarker(label: string, index: number) {
     console.log(`clicked the marker: ${label || index}`)
+    
   }
   
   mapClicked($event: MouseEvent) {
@@ -123,26 +140,7 @@ export class AddressComponent implements OnInit {
   //load Places Autocomplete
   
   
-  markers: marker[] = [
-	  {
-		  lat: 51.673858,
-		  lng: 7.815982,
-		  label: 'A',
-		  draggable: true
-	  },
-	  {
-		  lat: 51.373858,
-		  lng: 7.215982,
-		  label: 'B',
-		  draggable: false
-	  },
-	  {
-		  lat: 51.723858,
-		  lng: 7.895982,
-		  label: 'C',
-		  draggable: true
-	  }
-  ];
+  markers: marker[] = [];
   
   
   

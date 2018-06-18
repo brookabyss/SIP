@@ -36,6 +36,7 @@ export class SitesNewComponent implements OnInit, OnDestroy {
   all_business: boolean;
   all_days_selected: boolean;
   site_subscription: Subscription;
+  pages_subscription: Subscription;
   constructor(private _sitesService: SitesService, private atp: AmazingTimePickerService) { }
 
   ngOnInit() {
@@ -44,24 +45,25 @@ export class SitesNewComponent implements OnInit, OnDestroy {
       err => console.log(err),
       ()=>{}
     );
+    
+    
+    this.pages_subscription= this._sitesService.observedPages.subscribe(
+      pages => this.pages = pages,
+      err => console.log(err),
+      ()=>{}
+      )
+      
     this.address= new Address;
-    this.pages={
-      general_info: true,
-      address: null,
-      poc:null,
-      confirm:null
-    }
+    
+    
+    
+    
     this.all_business=false;
     //for styling
     this.all_days_selected= false;
     
     
-    /// POC linked list 
-    this.pocs_subscription= this._sitesService.observed_new_site_pocs.subscribe(
-      pocs => this.pocs = pocs,
-      err => console.log(err),
-      ()=>{}
-      )
+    
     this.GAR = new POC;
     this.GAR.poc_name="GAR";
     this.initial_order=0;
@@ -79,9 +81,8 @@ export class SitesNewComponent implements OnInit, OnDestroy {
   }
   
   addSite(){
-    console.dir(this.address);
     console.dir(this.site);
-    this._sitesService.addSite(this.site,this.address)
+    this._sitesService.addSite(this.site)
     .then(data=>{
       console.log(data);
       console.log(data[0].address_id.line_1)
@@ -96,8 +97,10 @@ export class SitesNewComponent implements OnInit, OnDestroy {
     for (let key in this.pages){
       this.pages[key]=null
     }
-   
+  
     this.pages[page]= true
+    
+    this._sitesService.updatePages(this.pages)
     
     
   }
@@ -142,68 +145,44 @@ export class SitesNewComponent implements OnInit, OnDestroy {
   }
   
   checkBusinessHours(){
-    let mon, tue, wed, thur, fri, sat, sun;
+    let mon, tue, wed, thur, fri, sat, sun,all;
     console.log("Business hours checked")
     this.all_business=! this.all_business
     this.all_days_selected = !this.all_days_selected
     console.log(this.all_business)
     console.log(document);
-    
+    all = (<HTMLInputElement>document.getElementById("check_business_hours"));
     mon= (<HTMLInputElement>document.getElementById("weekday-mon"));
-    mon.checked= !mon.checked
+    mon.checked= all.checked
     
     tue= (<HTMLInputElement>document.getElementById("weekday-tue"));
-    tue.checked= !tue.checked
+    tue.checked= all.checked
     
     wed= (<HTMLInputElement>document.getElementById("weekday-wed"));
-    wed.checked= !wed.checked;
+    wed.checked= all.checked
     
     thur= (<HTMLInputElement>document.getElementById("weekday-thu"));
-    thur.checked = !thur.checked;
+    thur.checked = all.checked
     
     fri=(<HTMLInputElement>document.getElementById("weekday-fri"));
-    fri.checked = !fri.checked;
+    fri.checked = all.checked
     
     sat=(<HTMLInputElement>document.getElementById("weekday-sat"));
-    sat.checked = !sat.checked;
+    sat.checked = all.checked
     
     sun=(<HTMLInputElement>document.getElementById("weekday-sun"));
-    sun.checked = !sun.checked;
+    sun.checked = all.checked
     for(let key in this.site.business_days){
           console.log(this.site.business_days[key])
-          this.site.business_days[key].active= !this.site.business_days[key].active
+          this.site.business_days[key].active= this.all_business
       }
     console.log(this.all_days_selected);
 
   }
   
   
-  addGAR(){
-    console.log("add GAR")
-    this.initial_order +=1;
-    this.GAR.order = this.initial_order
-    let GAR2 = new POC;
-    GAR2.poc_name="Test";
-    GAR2.order =2; 
-    let GAR3 = new POC;
-    GAR3.poc_name="Switch";
-    GAR3.order =3; 
-    this.pocs.insert(this.GAR)
-    this.pocs.insert(GAR2)
-    this.pocs.insert(GAR3)
-    this.pocs.exchange_orders(this.GAR,GAR3)
-    this.pocs.last_changed= Date.now()
-    this._sitesService.updateNewSitePOCS(this.pocs);
-    this.GAR = new POC;
-    this.GAR.poc_name= "GAR"
-  }
   
-  removePOC(contact){
-    console.log("remove",contact)
-    this.pocs.delete_node(contact);
-    this.pocs.last_changed= Date.now()
-    this._sitesService.updateNewSitePOCS(this.pocs);
-  }
+  
   
    ngOnDestroy(){
         

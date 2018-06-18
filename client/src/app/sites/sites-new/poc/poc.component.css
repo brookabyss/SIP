@@ -1,0 +1,17 @@
+.gar-list{
+    margin-top:0.5em;
+}
+
+input,label{
+   margin: 0.5em;
+}
+
+select.form-control{
+    width: 60%;
+}
+
+.nextPage{
+    position: relative;
+    left: 78%;
+    margin-bottom: 3px;
+}

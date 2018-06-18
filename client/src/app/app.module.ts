@@ -8,7 +8,6 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { WhileDirective } from './linkedlist-directive'
 import { AgmCoreModule } from '@agm/core';
 
-
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { SitesComponent } from './sites/sites.component';
@@ -26,6 +25,7 @@ import {SitesService } from './sites/sites-service';
 import {AlarmsService } from './alarms/alarms-service';
 import { AddressComponent } from './sites/sites-new/address/address.component';
 import { PocComponent } from './sites/sites-new/poc/poc.component';
+import { ConfirmComponent } from './sites/sites-new/confirm/confirm.component';
 
 
 
@@ -52,21 +52,20 @@ export function cookieStrategy() {
     AlarmsDispatchComponent,
     WhileDirective,
     AddressComponent,
-    PocComponent
+    PocComponent,
+    ConfirmComponent,
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
     AppRoutingModule,
     AmazingTimePickerModule,
     AngularFontAwesomeModule,
     AgmCoreModule.forRoot({
       apiKey:"AIzaSyC8mUARmEjgn9lDp199rjvV8QpRr5o_W6s",
       libraries: ["places"]
-    })
-    
-   
+    }),
+    BrowserModule,
+    FormsModule,
+    HttpModule,
   ],
   providers: [AlarmsService, LoginService, SitesService, {
         provide: XSRFStrategy,

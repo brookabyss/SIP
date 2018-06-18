@@ -1,0 +1,25 @@
+<div>
+   <p>Site Name: {{site.site_name}}</p>
+   <p>Site Code: {{site.site_code}}</p>
+   <p *ngIf="site.monitored_zone===1">Monitored: Yes</p>
+   <p *ngIf="site.monitored_zone===0">Monitored: No</p>
+   
+   <ul>
+    <li *ngIf="site.business_days[1].active">Mon ~ <strong>Start: {{site.business_days[1].start || 'N/A'}} - End:  {{site.business_days[1].end || 'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[2].active">Tue ~ <strong>Start: {{site.business_days[2].start || 'N/A'}} - End: {{site.business_days[2].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[3].active">Wed ~ <strong>Start: {{site.business_days[3].start || 'N/A'}} - End: {{site.business_days[3].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[4].active">Thu ~ <strong>Start: {{site.business_days[4].start || 'N/A'}} - End: {{site.business_days[4].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[5].active">Fri ~ <strong>Start: {{site.business_days[5].start || 'N/A'}} - End: {{site.business_days[5].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[6].active">Sat ~ <strong>Start: {{site.business_days[6].start ||'N/A'}} - End: {{site.business_days[6].end ||'N/A'}}</strong></li>
+     <li *ngIf="site.business_days[0].active">Sun ~ <strong>Start: {{site.business_days[0].start ||'N/A'}} - End: {{site.business_days[0].end ||'N/A'}}</strong></li>
+   </ul>
+   
+   <p>Address: {{site.address.line_1}}, {{site.address.city}}, {{site.address.region_state}}, {{site.address.country}}, {{site.address.zipcode}}</p>
+   <p>Latitude:  {{site.address.latitude}} </p>
+    <p>Longitude:  {{site.address.longitude}} </p>
+    
+    <button (click)="addSite()">Add Site</button>
+</div>
+
+
+   

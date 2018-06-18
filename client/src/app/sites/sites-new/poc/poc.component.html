@@ -1,4 +1,5 @@
-<form #pocForm="ngForm"  novalidate>
+<div class="poc-form">
+    <form #pocForm="ngForm"  novalidate>
     <label for="asm_email">ASM</label>
     <input 
         type="email"
@@ -15,14 +16,15 @@
         [(ngModel)]="this.site.RSM"
         #rsm_email="ngModel"
     ><br>
-    <label for="">General Alarm Responder</label>
-        <select name="gar" id=""[(ngModel)]="this.GAR.poc_type" #gar="ngModel" class="form-control form-control-sm">
+    <label for="gar">General Alarm Responder</label>
+        <select name="gar" id="method-of-contact"[(ngModel)]="this.GAR.poc_type" #gar="ngModel" class="form-control form-control-sm col-4" >
          <option value="null">Choose POC Method</option>
          <option value="email">Email</option>
          <option value="cell">Cell Number</option>
          <option value="office">Office Number</option>
         </select>
-    <label for="poc_value">POC Value</label><input class="form-control" type="text" required name="poc_value" [(ngModel)]="this.GAR.poc_value" #poc_value="ngModel"><br>
+    <label for="poc_value">Email/Phone</label><input (keyup.enter)="addGAR()" class="form-control col-5" type="text"  name="poc_value" [(ngModel)]="this.GAR.poc_value" #poc_value="ngModel"><br>
+
 
 
 
@@ -31,11 +33,10 @@
   class="form-check-input radio"
   type="radio"
   id="bh_check"
-  name="bh_check"
+  name="hours"
   required
   [(ngModel)]="this.GAR.available.bh"
-  #bh_check="ngModel"
-  [value]="true">
+  [value]="false">
   <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">Available Business Hours</label>
 </div>
 
@@ -44,29 +45,30 @@
   class="form-check-input radio"
   type="radio"
   id="ah_check"
-  name="ah_check"
+  name="hours"
   required
   [(ngModel)]="this.GAR.available.ah"
-  #ah_check="ngModel"
-  [value]="false">
+  [value]="true">
   <label class="form-check-label" id="checkboxlabel" for="inlineCheckbox">Available After Hours</label>
 </div>
-<i class="fa fa-plus" aria-hidden="true" (click)="addGAR()"></i>
-<table class="table table-sm">
+<i class="fa fa-plus" aria-hidden="true" (click)="addGAR()"></i><br>
+<table class="table table-sm gar-list" *ngIf="site.pocs.size > 0">
     <tr>
         <th>Order of contact</th>
         <th>Method of contact</th>
         <th>Number/Email</th>
         <th></th>
     </tr>
-    <tr *appWhile="pocs,let contact">
+    <tr *appWhile="site.pocs,let contact" ondragstart="dragStart($event)" draggable="true">
         <td>{{contact.order}}</td>
         <td>{{contact.poc_type}}</td>
         <td>{{contact.poc_value}}</td>
-        <i class="fa fa-window-close" aria-hidden="true" (click)="removePOC(contact)"></i>
+        <i class="fa fa-window-close" aria-hidden="true" (click)="removeGAR(contact)"></i>
 
     </tr>
 </table>
     
-    <button [disabled]="!pocForm.form.valid" class="nextPage btn btn-primary">Continue</button>
+    <button [disabled]="!pocForm.form.valid" class="nextPage btn btn-primary" (click)="toConfirm()">Continue</button>
 </form>
+
+</div>
